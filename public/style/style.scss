@@ -1,0 +1,240 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  // background-color: red;
+  font-family: "Nunito Sans", sans-serif;
+}
+#video-grid {
+  display: grid;
+  // grid-template-columns: repeat(auto-fill, 400px);
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-auto-rows: 300px;
+  position: relative;
+  transition: all 0.3s linear;
+}
+:root {
+  --footer-height: 70px;
+}
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s linear;
+}
+.video-wrapper {
+  position: relative;
+  transition: all 0.3s linear;
+  p {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    padding: 8px 16px;
+    background-color: rgba(0, 0, 0, 0.575);
+    margin: 0.5rem;
+    color: white;
+    border-radius: 0.25rem;
+  }
+}
+
+.zoom-video {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: calc(100vh - var(--footer-height));
+  background-color: rgba(0, 0, 0, 0.589);
+  video {
+    object-fit: contain;
+    // pointer-events: none;
+  }
+}
+footer {
+  height: var(--footer-height);
+  background-color: #1a1a1a;
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  .footer-btn {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    outline: none;
+    color: #d5d5d5;
+    padding: 8px 16px;
+    border-radius: 0.25rem;
+    margin: 8px 4px;
+    cursor: pointer;
+    &:hover {
+      border: none;
+      outline: none;
+      background-color: #2e2e2e;
+    }
+  }
+  .call {
+    background-color: #a51f1f;
+    &:hover {
+      background-color: #de2828;
+    }
+  }
+  .connect {
+    background-color: green;
+    &:hover {
+      background-color: rgb(4, 158, 4);
+    }
+  }
+  .btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    span {
+      margin-right: 0.5rem;
+      pointer-events: none;
+    }
+    i {
+      font-size: 1.65rem;
+      pointer-events: none;
+    }
+  }
+}
+.main-wrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - var(--footer-height));
+  overflow-y: auto;
+  background-color: #353535;
+}
+
+.video-element-btn {
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.575);
+  border-radius: 0.25rem;
+  margin: 8px;
+  cursor: pointer;
+  &:hover {
+    border: none;
+    outline: none;
+  }
+}
+.video-pinch-out-btn {
+  position: absolute;
+  margin: 0.5rem;
+  top: 0;
+  right: 0;
+}
+.video-minimize-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.none-pointer {
+  pointer-events: none;
+}
+
+// Share box
+.share-wrapper {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: all 0.2s linear;
+  font-weight: 600;
+  position: absolute;
+  top: -220px;
+  left: 0;
+  margin: 0.5rem;
+  background-color: white;
+  border-radius: 0.25rem;
+  width: 500px;
+  .share-wrapper-header {
+    padding: 0.75rem;
+    border-bottom: 1px solid lightgray;
+    color: #00509d;
+    p {
+      justify-content: center;
+    }
+  }
+  .share-wrapper-body {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+    color: #2e2e2e;
+    p + p {
+      margin-top: 0.75rem;
+    }
+  }
+  .group {
+    display: flex;
+    align-items: center;
+    i {
+      font-size: 1.5rem;
+    }
+    span {
+      margin-left: 0.5rem;
+    }
+  }
+  #copy {
+    --tooltip: "copy";
+    cursor: pointer;
+    position: relative;
+    i {
+      pointer-events: none;
+    }
+    span {
+      pointer-events: none;
+    }
+    &:before {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.2s linear;
+      position: absolute;
+      content: var(--tooltip);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      background-color: rgb(38, 38, 38);
+      top: -40px;
+      color: white;
+    }
+    &:hover {
+      &:before {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
+.active {
+  .share-wrapper {
+    opacity: 1;
+    pointer-events: all;
+    visibility: visible;
+  }
+}
+
+@media (max-width: 620px) {
+  :root {
+    --footer-height: 165px;
+  }
+  footer {
+    flex-direction: column;
+    .btn-group {
+      font-size: 1rem;
+      i {
+        font-size: 1.25rem;
+      }
+    }
+  }
+  .share-wrapper {
+    width: calc(100% - 1rem);
+    left: calc(50% - 0.5rem);
+    transform: translateX(-50%);
+    margin: 0 0.5rem;
+  }
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script>
+    const ROOM_ID = "<%= roomId %>"
+    const s = '<%= screen %>'
+  </script>
+  <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="script.js" defer></script>
+  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+  <div class="main-wrapper">
+    <div id="video-grid"></div>
+
+
+  </div>
+  <footer>
+    <div class="left-wrapper">
+      <button class="footer-btn btn-group share-btn"><span>Meeting Details</span><i
+          class="fas fa-angle-down"></i></button>
+      <div class="share-wrapper">
+        <div class="share-wrapper-header">
+          <p class="group"><i class="fas fa-info-circle"></i><span>Details</span></p>
+        </div>
+        <div class="share-wrapper-body">
+          <p><b>Joining Info</b></p>
+          <p>https://video.xyz.site/<%= roomId %>
+          </p>
+          <p id="copy" data="https://video.xyz.site/<%= roomId %>" class="group"><i class="fas fa-copy"></i><span>Copy
+              joining info</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="middle-wrapper">
+      <button id="video" class="footer-btn" onclick="stop()"><i class="fas fa-video"></i></button>
+      <button data="false" id="meeting-end" class="footer-btn call connect" onclick="call()"><i
+          class="fas fa-phone"></i></button>
+      <button id="mute" class="footer-btn" onclick="mute()"><i class="fas fa-microphone"></i></button>
+    </div>
+    <div class="right-wrapper">
+      <button id="share-screen" onclick="shareScreen()" class="footer-btn btn-group"><span>Present</span><i
+          class="fas fa-tv"></i></button>
+    </div>
+
+
+  </footer>
+</body>
+
+</html>
