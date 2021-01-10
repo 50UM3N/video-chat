@@ -252,8 +252,12 @@ function call() {
 }
 // copy text
 const copyBtn = document.getElementById("copy");
+copyBtn.setAttribute("data", `${window.location.origin}/${ROOM_ID}`);
+document.getElementById(
+  "url_text"
+).innerHTML = `${window.location.origin}/${ROOM_ID}`;
 copyBtn.addEventListener("mousedown", (e) => {
-  const text = `https://xyx.site/${ROOM_ID}`;
+  const text = `${window.location.origin}/${ROOM_ID}`;
   navigator.clipboard.writeText(text);
   copyBtn.style.setProperty("--tooltip", '"copied"');
 });
