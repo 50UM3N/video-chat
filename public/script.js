@@ -162,78 +162,9 @@ function addVideoStream(video, stream, p, n) {
 }
 
 function shareScreen() {
-  var Screen_Peer_ID;
-  const screenVideo = document.createElement("video");
-  screenVideo.muted = true;
-  location.replace(`/${ROOM_ID}?screen=true`);
-  // const screenPeer = new Peer(undefined, {
-  //   path: "/peerjs",
-  //   host: "/",
-  //   //  port: "3000",
-  // });
-  // navigator.mediaDevices
-  //   .getDisplayMedia({
-  //     video: true,
-  //     audio: {
-  //       echoCancellation: true,
-  //       noiseSuppression: true,
-  //       sampleRate: 44100,
-  //     },
-  //   })
-  //   .then((stream) => {
-  //     socket.emit("join-room-screen", ROOM_ID, Screen_Peer_ID, name);
-  //     stream.getVideoTracks()[0].onended = () => {
-  //       location.replace(`/${ROOM_ID}`);
-  //     };
-  //     addVideoStream(screenVideo, stream, null, name);
-  //     // recieve the others stream
-  //     screenPeer.on("call", (call) => {
-  //       peers[call.peer] = call;
-  //       call.answer(stream);
-  //       console.log(call);
-  //       const video = document.createElement("video");
-  //       call.on("stream", (userVideoStream) => {
-  //         fetch(`/user/${call.peer}`)
-  //           .then((res) => {
-  //             return res.json();
-  //           })
-  //           .then((data) => {
-  //             addVideoStream(video, userVideoStream, call.peer, data.name);
-  //           });
-  //       });
-  //       call.on("close", () => {
-  //         video.parentElement.remove();
-  //       });
-  //     });
-
-  //     socket.on("user-connected-screen", (userId) => {
-  //       console.log("user-connected");
-  //       connectToNewUser1(userId, stream);
-  //     });
-  //   });
-  // screenPeer.on("open", (id) => {
-  //   Screen_Peer_ID = id;
-  // });
-  // function connectToNewUser1(userId, stream) {
-  //   // set others peerid and send my stream
-  //   const call = screenPeer.call(userId, stream);
-  //   console.log(call);
-  //   const video = document.createElement("video");
-  //   call.on("stream", (userVideoStream) => {
-  //     fetch(`/user/${call.peer}`)
-  //       .then((res) => {
-  //         return res.json();
-  //       })
-  //       .then((data) => {
-  //         addVideoStream(video, userVideoStream, call.peer, data.name);
-  //       });
-  //   });
-  //   call.on("close", () => {
-  //     video.parentElement.remove();
-  //   });
-  //   peers[userId] = call;
-  // }
+  window.open(`/${ROOM_ID}?screen=true`);
 }
+
 function asd() {
   console.log(peers);
 }
@@ -312,6 +243,7 @@ function call() {
     console.log(Peer_ID);
     callBtn.classList.remove("connect");
     callBtn.setAttribute("data", "true");
+    callBtn.setAttribute("tool_tip", "Leave the meeting");
     socket.emit("join-room", ROOM_ID, Peer_ID, name);
   }
   if (flag == "true") {
@@ -321,7 +253,7 @@ function call() {
 // copy text
 const copyBtn = document.getElementById("copy");
 copyBtn.addEventListener("mousedown", (e) => {
-  const text = `https://digiclass.site/${ROOM_ID}`;
+  const text = `https://xyx.site/${ROOM_ID}`;
   navigator.clipboard.writeText(text);
   copyBtn.style.setProperty("--tooltip", '"copied"');
 });

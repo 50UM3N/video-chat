@@ -21,6 +21,26 @@
     integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
     crossorigin="anonymous" />
   <link rel="stylesheet" href="style/style.css">
+  <script defer>
+    window.onload = function () {
+      const loader = document.createElement('div')
+      loader.classList.add('card-wrapper')
+      loader.innerHTML = `<div class="card-loader">
+			<div class="spinner">
+				<div class="spinner-item"></div>
+				<div class="spinner-item"></div>
+				<div class="spinner-item"></div>
+				<div class="spinner-item"></div>
+				<div class="spinner-item"></div>
+			</div>
+			<p>Loading ....</p>
+    </div>`
+      document.body.appendChild(loader)
+      setTimeout(() => {
+        loader.remove()
+      }, 8000);
+    };
+  </script>
 </head>
 
 <body>
@@ -48,8 +68,8 @@
     </div>
     <div class="middle-wrapper">
       <button id="video" class="footer-btn" onclick="stop()"><i class="fas fa-video"></i></button>
-      <button data="false" id="meeting-end" class="footer-btn call connect" onclick="call()"><i
-          class="fas fa-phone"></i></button>
+      <button data="false" id="meeting-end" class="footer-btn call connect tooltip" tool_tip="Join the Meeting"
+        onclick="call()"><i class="fas fa-phone"></i></button>
       <button id="mute" class="footer-btn" onclick="mute()"><i class="fas fa-microphone"></i></button>
     </div>
     <div class="right-wrapper">

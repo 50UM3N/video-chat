@@ -17,6 +17,10 @@ body {
 }
 :root {
   --footer-height: 70px;
+  --size: 95px;
+  --clr1: #198754;
+  --clr2: #dc3545;
+  --clr3: #ffc107;
 }
 video {
   width: 100%;
@@ -236,5 +240,179 @@ footer {
     left: calc(50% - 0.5rem);
     transform: translateX(-50%);
     margin: 0 0.5rem;
+  }
+}
+
+// spinner
+.card-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.816);
+}
+
+.card-loader {
+  width: 100%;
+  width: 500px;
+  height: 250px;
+  border-radius: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 1.5rem;
+}
+
+.card-loader p {
+  color: white;
+}
+.spinner {
+  --animation-duration: 5000ms;
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  transform: rotate(45deg);
+
+  .spinner-item {
+    --item-size: calc(var(--size) / 2.5);
+    position: absolute;
+    width: var(--item-size);
+    height: var(--item-size);
+    border: 4px solid var(--clr-spinner);
+  }
+
+  .spinner-item:nth-child(1) {
+    --clr-spinner: var(--clr1);
+    top: 0;
+    left: 0;
+    animation: spinner3A var(--animation-duration) linear infinite;
+
+    @keyframes spinner3A {
+      0%,
+      8.33%,
+      16.66%,
+      100% {
+        transform: translate(0%, 0%);
+      }
+
+      24.99%,
+      33.32%,
+      41.65% {
+        transform: translate(100%, 0%);
+      }
+
+      49.98%,
+      58.31%,
+      66.64% {
+        transform: translate(100%, 100%);
+      }
+
+      74.97%,
+      83.30%,
+      91.63% {
+        transform: translate(0%, 100%);
+      }
+    }
+  }
+
+  .spinner-item:nth-child(2) {
+    --clr-spinner: var(--clr2);
+    top: 0;
+    left: var(--item-size);
+    animation: spinner3B var(--animation-duration) linear infinite;
+
+    @keyframes spinner3B {
+      0%,
+      8.33%,
+      91.63%,
+      100% {
+        transform: translate(0%, 0%);
+      }
+
+      16.66%,
+      24.99%,
+      33.32% {
+        transform: translate(0%, 100%);
+      }
+
+      41.65%,
+      49.98%,
+      58.31% {
+        transform: translate(-100%, 100%);
+      }
+
+      66.64%,
+      74.97%,
+      83.30% {
+        transform: translate(-100%, 0%);
+      }
+    }
+  }
+
+  .spinner-item:nth-child(3) {
+    --clr-spinner: var(--clr3);
+    top: var(--item-size);
+    left: var(--item-size);
+    animation: spinner3C var(--animation-duration) linear infinite;
+
+    @keyframes spinner3C {
+      0%,
+      83.30%,
+      91.63%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      8.33%,
+      16.66%,
+      24.99% {
+        transform: translate(-100%, 0);
+      }
+
+      33.32%,
+      41.65%,
+      49.98% {
+        transform: translate(-100%, -100%);
+      }
+
+      58.31%,
+      66.64%,
+      74.97% {
+        transform: translate(0, -100%);
+      }
+    }
+  }
+}
+// @import url("https://fonts.googleapis.com/css?family=Poppins:400");
+// side nav
+
+.tooltip {
+  position: relative;
+  &::before {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    content: attr(tool_tip);
+    display: inline;
+    white-space: nowrap;
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: brown;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s linear;
+  }
+  &:hover {
+    &::before {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 }
