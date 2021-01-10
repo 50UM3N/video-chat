@@ -19,8 +19,8 @@ if (detectMob()) {
 }
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
-// const name = prompt("Your name");
-const name = "Soumen Khara";
+const name = prompt("Your name");
+// const name = "Soumen Khara";
 const myPeer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
