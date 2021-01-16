@@ -37,13 +37,41 @@ video {
   transition: all 0.3s linear;
 }
 
+video.mirror {
+  -webkit-transform: scale(-1, 1);
+          transform: scale(-1, 1);
+}
+
 .video-wrapper {
   position: relative;
   -webkit-transition: all 0.3s linear;
   transition: all 0.3s linear;
 }
 
+.video-wrapper .share-screen {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.589);
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.video-wrapper .share-screen .stop-btn {
+  font-size: 1.25rem;
+}
+
 .video-wrapper p {
+  z-index: 2;
   position: absolute;
   bottom: 0;
   display: -webkit-box;
@@ -58,10 +86,10 @@ video {
 
 .zoom-video {
   position: absolute;
-  z-index: 1;
+  z-index: 4;
   width: 100%;
   height: calc(100vh - var(--footer-height));
-  background-color: rgba(0, 0, 0, 0.589);
+  background-color: #1a1a1a;
 }
 
 .zoom-video video {
@@ -142,6 +170,31 @@ footer .btn-group i {
   pointer-events: none;
 }
 
+footer .right-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+footer .right-wrapper .cameras {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: -60px;
+  left: 0;
+  margin: 0.5rem;
+  background-color: white;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+}
+
+footer .right-wrapper .active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
 .main-wrapper {
   position: relative;
   width: 100%;
@@ -160,6 +213,7 @@ footer .btn-group i {
   border-radius: 0.25rem;
   margin: 8px;
   cursor: pointer;
+  z-index: 2;
 }
 
 .video-element-btn:hover {
@@ -192,6 +246,7 @@ footer .btn-group i {
   transition: all 0.2s linear;
   font-weight: 600;
   position: absolute;
+  z-index: 4;
   top: -220px;
   left: 0;
   margin: 0.5rem;
@@ -280,7 +335,7 @@ footer .btn-group i {
 
 @media (max-width: 620px) {
   :root {
-    --footer-height: 165px;
+    --footer-height: 175px;
   }
   footer {
     -webkit-box-orient: vertical;

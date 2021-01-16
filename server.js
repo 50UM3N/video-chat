@@ -19,7 +19,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:room", (req, res) => {
-  res.render("room", { roomId: req.params.room, screen: req.query.screen });
+  res.render("room", {
+    roomId: req.params.room,
+    screen: req.query.screen,
+    NAME: "soumen",
+  });
 });
 
 app.get("/user/:id", (req, res) => {
@@ -60,4 +64,4 @@ io.on("connection", (socket) => {
   });
 });
 console.log(process.env.PORT);
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 8080);

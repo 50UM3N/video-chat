@@ -17,78 +17,67 @@ if (detectMob()) {
   const cont = document.querySelector("#share-screen");
   cont.remove();
 }
+if (!detectMob()) {
+  const a = document.querySelector("#cams");
+  a.remove();
+}
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
-const name = prompt("Your name");
-// const name = "Soumen Khara";
+// const name = prompt("Your name");
 const myPeer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  //  port: "3000",
+  port: "8080",
 });
 var Peer_ID;
 const myVideo = document.createElement("video");
 console.log(myPeer);
 myVideo.muted = true;
-let myVideoStream;
+var myVideoStream;
+var myVideoTrack;
 const peers = {};
-if (s) {
-  navigator.mediaDevices
-    .getDisplayMedia({
-      video: true,
-      audio: {
-        echoCancellation: true,
-        noiseSuppression: true,
-        sampleRate: 44100,
-      },
-    })
-    .then((stream) => {
-      myVideoStream = stream;
-      stream.getVideoTracks()[0].onended = () => {
-        location.replace(`/${ROOM_ID}`);
-      };
-      processStream(stream, 10000);
-    });
-} else {
-  navigator.mediaDevices
-    .getUserMedia({ audio: true })
-    .then((stream) => {
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: true,
-        })
-        .then((stream) => {
-          myVideoStream = stream;
-          processStream(stream, 0);
-        });
-    })
-    .catch((err) => {
-      console.log("Dont have microphone");
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: false,
-        })
-        .then((stream) => {
-          myVideoStream = stream;
-          processStream(stream, 0);
-        });
-    });
-}
+
+navigator.mediaDevices
+  .getUserMedia({ audio: true })
+  .then((stream) => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then((stream) => {
+        myVideoStream = stream;
+        myVideoTrack = stream.getVideoTracks()[0];
+        processStream(myVideoStream);
+      });
+  })
+  .catch((err) => {
+    console.log("Dont have microphone");
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: false,
+      })
+      .then((stream) => {
+        myVideoStream = stream;
+        processStream(myVideoStream);
+      });
+  });
 
 socket.on("user-disconnected", (userId) => {
-  if (peers[userId]) peers[userId].close();
+  if (peers[userId]) {
+    peers[userId].close();
+    delete peers[userId];
+  }
 });
 
-function processStream(stream, timeOut) {
-  stream.name = "soumen";
-  addVideoStream(myVideo, stream, null, name);
+function processStream(stream) {
+  addVideoStream(myVideo, myVideoStream, null, name);
   // recieve the others stream
   myPeer.on("call", (call) => {
     peers[call.peer] = call;
-    call.answer(stream);
-    console.log(call);
+    call.answer(myVideoStream);
+    console.log(peers);
     const video = document.createElement("video");
     call.on("stream", (userVideoStream) => {
       fetch(`/user/${call.peer}`)
@@ -96,7 +85,6 @@ function processStream(stream, timeOut) {
           return res.json();
         })
         .then((data) => {
-          console.log(data);
           addVideoStream(video, userVideoStream, call.peer, data.name);
         });
     });
@@ -106,8 +94,8 @@ function processStream(stream, timeOut) {
   });
 
   socket.on("user-connected", (userId) => {
-    console.log("user-connected");
-    connectToNewUser(userId, stream);
+    console.log("User Connected");
+    connectToNewUser(userId, myVideoStream);
   });
 }
 myPeer.on("open", (id) => {
@@ -115,9 +103,7 @@ myPeer.on("open", (id) => {
 });
 function connectToNewUser(userId, stream) {
   // set others peerid and send my stream
-  stream.name = "soumen";
   const call = myPeer.call(userId, stream);
-  console.log(call);
   const video = document.createElement("video");
   call.on("stream", (userVideoStream) => {
     fetch(`/user/${call.peer}`)
@@ -125,15 +111,14 @@ function connectToNewUser(userId, stream) {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         addVideoStream(video, userVideoStream, call.peer, data.name);
       });
   });
   call.on("close", () => {
     video.parentElement.remove();
   });
-
   peers[userId] = call;
+  console.log(peers);
 }
 
 function addVideoStream(video, stream, p, n) {
@@ -146,27 +131,76 @@ function addVideoStream(video, stream, p, n) {
   video.srcObject = stream;
   video.setAttribute("peer", p);
   video.setAttribute("name", n);
+  if (p == null) {
+    video.classList.add("mirror");
+  }
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
-  // pinch out button
-  // const pinchOutBtn = document.createElement("button");
-  // pinchOutBtn.classList.add("video-element-btn");
-  // pinchOutBtn.classList.add("video-pinch-out-btn");
-  // pinchOutBtn.innerHTML = `<i class="none-pointer fas fa-compress-arrows-alt fa-2x"></i>`;
-  // videoWrapper.appendChild(pinchOutBtn);
   videoWrapper.appendChild(video);
-  console.log(videoWrapper.childNodes);
   videoGrid.append(videoWrapper);
   eventAdd(video);
 }
 
 function shareScreen() {
-  window.open(`/${ROOM_ID}?screen=true`);
-}
+  navigator.mediaDevices
+    .getDisplayMedia({
+      video: true,
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        sampleRate: 44100,
+      },
+    })
+    .then((stream) => {
+      // myVideoStream = stream;
+      var videoTrack = stream.getVideoTracks()[0];
+      myVideoTrack = myVideoStream.getVideoTracks()[0];
+      console.log("Before: " + myVideoStream.MediaStream, myVideoTrack);
+      replaceVideoTrack(myVideoStream, videoTrack);
+      console.log("After: " + myVideoStream.MediaStream, myVideoTrack);
+      for (peer in peers) {
+        let sender = peers[peer].peerConnection.getSenders().find(function (s) {
+          return s.track.kind == videoTrack.kind;
+        });
+        sender.replaceTrack(videoTrack);
+      }
+      const videoWrapper = document.getElementById("video-wrapper");
+      const shareS = document.createElement("div");
+      shareS.classList.add("share-screen");
+      const stopBtn = document.createElement("button");
+      stopBtn.classList.add("video-element-btn");
+      stopBtn.classList.add("stop-btn");
 
-function asd() {
-  console.log(peers);
+      stopBtn.innerHTML = "Stop Sharing";
+      shareS.appendChild(stopBtn);
+      videoWrapper.appendChild(shareS);
+      videoTrack.onended = () => {
+        shareS.remove();
+        for (peer in peers) {
+          let sender = peers[peer].peerConnection
+            .getSenders()
+            .find(function (s) {
+              return s.track.kind == videoTrack.kind;
+            });
+          sender.replaceTrack(myVideoTrack);
+        }
+        replaceVideoTrack(myVideoStream, myVideoTrack);
+      };
+      stopBtn.onclick = () => {
+        videoTrack.stop();
+        shareS.remove();
+        for (peer in peers) {
+          let sender = peers[peer].peerConnection
+            .getSenders()
+            .find(function (s) {
+              return s.track.kind == videoTrack.kind;
+            });
+          sender.replaceTrack(myVideoTrack);
+        }
+        replaceVideoTrack(myVideoStream, myVideoTrack);
+      };
+    });
 }
 
 setInterval(() => {
@@ -184,8 +218,6 @@ const eventAdd = (element) => {
 
 const videoClickEvent = (e) => {
   const videoWrapper = e.target.parentElement;
-  console.log("Video CLick");
-  console.log(videoWrapper.classList.contains("zoom-video"));
   if (!videoWrapper.classList.contains("zoom-video")) {
     videoWrapper.classList.add("zoom-video");
     const minimizeBtn = document.createElement("button");
@@ -198,7 +230,6 @@ const videoClickEvent = (e) => {
 };
 
 const crossBtnClickEvent = (e) => {
-  console.log(e.target);
   const videoWrapper = e.target.parentElement;
   if (videoWrapper.classList.contains("zoom-video")) {
     videoWrapper.classList.remove("zoom-video");
@@ -240,7 +271,6 @@ function call() {
   const callBtn = document.getElementById("meeting-end");
   const flag = callBtn.getAttribute("data");
   if (flag == "false") {
-    console.log(Peer_ID);
     callBtn.classList.remove("connect");
     callBtn.setAttribute("data", "true");
     callBtn.setAttribute("tool_tip", "Leave the meeting");
@@ -252,15 +282,59 @@ function call() {
 }
 // copy text
 const copyBtn = document.getElementById("copy");
-copyBtn.setAttribute("data", `${window.location.origin}/${ROOM_ID}`);
-document.getElementById(
-  "url_text"
-).innerHTML = `${window.location.origin}/${ROOM_ID}`;
 copyBtn.addEventListener("mousedown", (e) => {
-  const text = `${window.location.origin}/${ROOM_ID}`;
+  const text = `https://digiclass.site/${ROOM_ID}`;
   navigator.clipboard.writeText(text);
   copyBtn.style.setProperty("--tooltip", '"copied"');
 });
 copyBtn.addEventListener("mouseout", (e) => {
   copyBtn.style.setProperty("--tooltip", '"copy"');
 });
+
+const changeCam = (e) => {
+  myVideoStream.getTracks().forEach((track) => {
+    track.stop();
+  });
+  var cams = e.getAttribute("camera");
+  cams = JSON.parse(cams);
+  console.log(cams);
+  var camId;
+  for (cam in cams) {
+    if (cams[cam] == false) {
+      camId = cam;
+      cams[cam] = true;
+    } else {
+      cams[cam] = false;
+    }
+  }
+  e.setAttribute("camera", JSON.stringify(cams));
+  navigator.mediaDevices
+    .getUserMedia({
+      video: { deviceId: { exact: camId } },
+      audio: true,
+    })
+    .then((stream) => {
+      myVideoStream = stream;
+      let videoTrack = stream.getVideoTracks()[0];
+      let audioTrack = stream.getAudioTracks()[0];
+      myVideo.srcObject = stream;
+      for (peer in peers) {
+        let sender = peers[peer].peerConnection.getSenders().find(function (s) {
+          return s.track.kind == videoTrack.kind;
+        });
+        sender.replaceTrack(videoTrack);
+        sender = peers[peer].peerConnection.getSenders().find(function (s) {
+          return s.track.kind == audioTrack.kind;
+        });
+        sender.replaceTrack(audioTrack);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const replaceVideoTrack = (stream, videoTrack) => {
+  stream.removeTrack(stream.getVideoTracks()[0]);
+  stream.addTrack(videoTrack);
+};

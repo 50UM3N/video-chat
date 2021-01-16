@@ -28,10 +28,29 @@ video {
   object-fit: cover;
   transition: all 0.3s linear;
 }
+video.mirror {
+  transform: scale(-1, 1);
+}
 .video-wrapper {
   position: relative;
   transition: all 0.3s linear;
+  .share-screen {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.589);
+    // pointer-events: none;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .stop-btn {
+      font-size: 1.25rem;
+    }
+  }
   p {
+    z-index: 2;
     position: absolute;
     bottom: 0;
     display: flex;
@@ -45,10 +64,10 @@ video {
 
 .zoom-video {
   position: absolute;
-  z-index: 1;
+  z-index: 4;
   width: 100%;
   height: calc(100vh - var(--footer-height));
-  background-color: rgba(0, 0, 0, 0.589);
+  background-color: rgb(26, 26, 26);
   video {
     object-fit: contain;
     // pointer-events: none;
@@ -104,6 +123,27 @@ footer {
       pointer-events: none;
     }
   }
+  .right-wrapper {
+    display: flex;
+    // position: relative;
+    .cameras {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      position: absolute;
+      top: -60px;
+      left: 0;
+      margin: 0.5rem;
+      background-color: white;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+    }
+    .active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+  }
 }
 .main-wrapper {
   position: relative;
@@ -123,6 +163,7 @@ footer {
   border-radius: 0.25rem;
   margin: 8px;
   cursor: pointer;
+  z-index: 2;
   &:hover {
     border: none;
     outline: none;
@@ -151,6 +192,7 @@ footer {
   transition: all 0.2s linear;
   font-weight: 600;
   position: absolute;
+  z-index: 4;
   top: -220px;
   left: 0;
   margin: 0.5rem;
@@ -224,7 +266,7 @@ footer {
 
 @media (max-width: 620px) {
   :root {
-    --footer-height: 165px;
+    --footer-height: 175px;
   }
   footer {
     flex-direction: column;
