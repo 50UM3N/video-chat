@@ -1,4 +1,82 @@
-<div class="container py-5" style="display: flex; justify-content: center; align-items: center;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" style="color: #5F6368;"> <span style="font-weight: bold;">S</span> Meet</a>
+        <div class="d-flex">
+            <p class="m-0 px-3" style="font-weight: bold; color: #5F6368;">
+                <%= user.name %>
+            </p>
+            <a class="icon" href="#">
+                <ion-icon name="help-circle-outline"></ion-icon>
+            </a>
+            <a class="icon" href="#">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+            </a>
+            <a class="icon" href="#">
+                <ion-icon name="settings-outline"></ion-icon>
+            </a>
+            <a class="icon" href="/logout">
+                <ion-icon name="exit-outline"></ion-icon>
+            </a>
+        </div>
+        <style>
+            .icon {
+                text-decoration: none;
+                color: #5F6368;
+                padding: 0rem .25rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: .25rem;
+                margin: 0rem .35rem;
+            }
+
+            .icon:hover {
+                background-color: rgb(197, 197, 197);
+                color: #5F6368;
+            }
+
+            .icon ion-icon {
+                font-size: 1.7rem;
+            }
+        </style>
+    </div>
+</nav>
+<div class="container py-5">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <h1 class="mb-3">
+                Premium video meetings. Now free for everyone.
+            </h1>
+            <p style="color: #5F6368;">We re-engineered the service we built for secure business meetings, Google Meet,
+                to make it free and
+                available for all.</p>
+            <div class="a123 my-5" style="display: flex; ">
+                <a class="btn btn-primary" style="width: 180px;" href="/new-meeting" role="button">New
+                    Meeting</a>
+                <form action="join-room" style="margin-left: 1rem;" method="POST">
+                    <div class="input-group ">
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            <ion-icon name="planet-outline"></ion-icon>
+                        </span>
+                        <input name="room_id" type="text" class="form-control" placeholder="Enter a code or Link"
+                            aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button class="btn btn-outline-primary" type="submit" id="button-addon2">Join</button>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <p><a href="#" style="text-decoration: none;">Learn more about</a> S Meet</p>
+        </div>
+        <div class="col-md-6">
+            <div class="card" style="box-shadow: 0 0 5px #b8b8b8;">
+                <div class="card-body">
+                    <img src="/images/ss.png" width="100%" class="rounded" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="container py-5" style="display: flex; justify-content: center; align-items: center;">
     <div class="card" style="width: 25rem;">
         <div class="card-header">
             Meeting
@@ -19,4 +97,4 @@
             <a style="width: 100%;" type="submit" class="btn btn-danger">Log Out</a>
         </div>
     </div>
-</div>
+</div> -->

@@ -1,26 +1,49 @@
-<div class="container py-5" style="display: flex; justify-content: center; align-items: center;">
-    <div class="card" style="width: 25rem;">
-        <div class="card-header">
-            Meeting
+<div class="container py-5"
+    style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+    <h3 class="text-center mb-3">Login S Meet</h3>
+    <div class="card" style="width: 35rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;" class="card-header">
+            <p class="m-0">Login Form</p><a href="/signup" type="button" class="btn btn-outline-success">Sign Up</a>
         </div>
         <div class="card-body">
             <form action="/login" method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <input required name="name" type="text" class="form-control" placeholder="Full name">
-                    <!-- <div class="form-text">You have to enter the room id to enter a specific room.
-                    </div> -->
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input required name="email" class="form-control" type="email" placeholder="Full name">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input required name="password" type="password" class="form-control" placeholder="Full name">
-                </div>
-                <button style="width: 100%;" type="submit" class="btn btn-primary mb-3">Join</button>
+                <% if(locals.messages.success){ %>
+                    <div class="alert alert-success" role="alert">
+                        <%= locals.messages.success %>
+                    </div>
+                    <% } %>
+                        <% if(locals.messages.error){ %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= locals.messages.error %>
+                            </div>
+                            <% } %>
+                                <div class="mb-3">
+                                    <label class="form-label">Username</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <ion-icon name="person-circle-outline"></ion-icon>
+                                        </div>
+                                        <input name="username" type="text" class="form-control" placeholder="Username">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <ion-icon name="lock-closed-outline"></ion-icon>
+                                        </div>
+                                        <input name="password" type="password" class="form-control"
+                                            placeholder="Password">
+                                    </div>
+                                </div>
+                                <button style="width: 100%;" type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    body {
+        background-color: #F5F5F5;
+    }
+</style>

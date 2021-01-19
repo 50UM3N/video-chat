@@ -7,12 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script>
         const ROOM_ID = "<%= roomId %>"
-        const name = "<%= NAME%>"
+        const name = "<%= user.name%>"
     </script>
     <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <script src="/socket.io/socket.io.js" defer></script>
     <script src="script.js" defer></script>
-    <title>DigiClass</title>
+    <title>
+        <%= tabName %>
+    </title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <!-- google fonts NUNITO -->
     <link rel="preconnect" href="https://fonts.gstatic.com">

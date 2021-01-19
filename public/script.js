@@ -27,7 +27,7 @@ const videoGrid = document.getElementById("video-grid");
 const myPeer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  // port: "8080",
+  port: "8080",
 });
 var Peer_ID;
 const myVideo = document.createElement("video");
@@ -316,7 +316,8 @@ camToggleBtn.addEventListener("click", (e) => {
   myVideoStream.getTracks().forEach((track) => {
     track.stop();
   });
-  var cams = e.getAttribute("camera");
+  myVideo.classList.toggle("mirror");
+  var cams = e.target.getAttribute("camera");
   cams = JSON.parse(cams);
   var camId;
   for (cam in cams) {
@@ -327,7 +328,7 @@ camToggleBtn.addEventListener("click", (e) => {
       cams[cam] = false;
     }
   }
-  e.setAttribute("camera", JSON.stringify(cams));
+  e.target.setAttribute("camera", JSON.stringify(cams));
   navigator.mediaDevices
     .getUserMedia({
       video: { deviceId: { exact: camId } },
