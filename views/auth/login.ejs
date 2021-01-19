@@ -1,0 +1,26 @@
+<div class="container py-5" style="display: flex; justify-content: center; align-items: center;">
+    <div class="card" style="width: 25rem;">
+        <div class="card-header">
+            Meeting
+        </div>
+        <div class="card-body">
+            <form action="/login" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input required name="name" type="text" class="form-control" placeholder="Full name">
+                    <!-- <div class="form-text">You have to enter the room id to enter a specific room.
+                    </div> -->
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input required name="email" class="form-control" type="email" placeholder="Full name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input required name="password" type="password" class="form-control" placeholder="Full name">
+                </div>
+                <button style="width: 100%;" type="submit" class="btn btn-primary mb-3">Join</button>
+            </form>
+        </div>
+    </div>
+</div>
