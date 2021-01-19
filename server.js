@@ -11,15 +11,22 @@ var users = {};
 app.use(express.json());
 app.use("/peerjs", peerServer);
 app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static("public"));
 
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
+app.use(express.static("public"));
+app.use(require("express-ejs-layouts"));
+app.set("layout", "layouts/layout");
 app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
 app.get("/:room", (req, res) => {
   res.render("room", {
+    layout: "layouts/videoLayout",
     roomId: req.params.room,
     screen: req.query.screen,
     NAME: "soumen",
@@ -28,7 +35,9 @@ app.get("/:room", (req, res) => {
 
 app.get("/user/:id", (req, res) => {
   console.log(users[req.params.id]);
-  res.json({ name: users[req.params.id] });
+  res.json({
+    name: users[req.params.id],
+  });
 });
 
 app.post("/join-room", (req, res) => {
