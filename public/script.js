@@ -311,14 +311,13 @@ meetingToggleBtn.addEventListener("click", (e) => {
 // copyBtn.addEventListener("mouseout", (e) => {
 //   copyBtn.style.setProperty("--tooltip", '"copy"');
 // });
-
-const changeCam = (e) => {
+const camToggleBtn = document.getElementById("cams-toggle");
+camToggleBtn.addEventListener("click", (e) => {
   myVideoStream.getTracks().forEach((track) => {
     track.stop();
   });
   var cams = e.getAttribute("camera");
   cams = JSON.parse(cams);
-  // console.log(cams);
   var camId;
   for (cam in cams) {
     if (cams[cam] == false) {
@@ -353,7 +352,49 @@ const changeCam = (e) => {
     .catch((error) => {
       console.log(error);
     });
-};
+});
+// const changeCam = (e) => {
+//   myVideoStream.getTracks().forEach((track) => {
+//     track.stop();
+//   });
+//   var cams = e.getAttribute("camera");
+//   cams = JSON.parse(cams);
+//   // console.log(cams);
+//   var camId;
+//   for (cam in cams) {
+//     if (cams[cam] == false) {
+//       camId = cam;
+//       cams[cam] = true;
+//     } else {
+//       cams[cam] = false;
+//     }
+//   }
+//   e.setAttribute("camera", JSON.stringify(cams));
+//   navigator.mediaDevices
+//     .getUserMedia({
+//       video: { deviceId: { exact: camId } },
+//       audio: true,
+//     })
+//     .then((stream) => {
+//       myVideoStream = stream;
+//       let videoTrack = stream.getVideoTracks()[0];
+//       let audioTrack = stream.getAudioTracks()[0];
+//       myVideo.srcObject = stream;
+//       for (peer in peers) {
+//         let sender = peers[peer].peerConnection.getSenders().find(function (s) {
+//           return s.track.kind == videoTrack.kind;
+//         });
+//         sender.replaceTrack(videoTrack);
+//         sender = peers[peer].peerConnection.getSenders().find(function (s) {
+//           return s.track.kind == audioTrack.kind;
+//         });
+//         sender.replaceTrack(audioTrack);
+//       }
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// };
 
 const replaceVideoTrack = (stream, videoTrack) => {
   stream.removeTrack(stream.getVideoTracks()[0]);
