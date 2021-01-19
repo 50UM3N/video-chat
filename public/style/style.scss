@@ -18,10 +18,11 @@ a {
   --color5: 4, 231, 98; //call button color
   --color6: 255, 47, 25; //call end button color
   --footer-height: 80px;
-  --size: 95px;
-  --clr1: #198754;
-  --clr2: #dc3545;
-  --clr3: #ffc107;
+  --size: 75px;
+  --clr1: #2e2cb4;
+  --clr2: #4745ce;
+  --clr3: #6765cf;
+  --clr4: #8786df;
 }
 body,
 ::after,
@@ -241,46 +242,7 @@ footer {
     }
   }
 }
-// // Share box
-// .share-wrapper {
-//   opacity: 0;
-//   pointer-events: none;
-//   visibility: hidden;
-//   transition: all 0.2s linear;
-//   font-weight: 600;
-//   position: absolute;
-//   z-index: 4;
-//   top: -220px;
-//   left: 0;
-//   margin: 0.5rem;
-//   background-color: white;
-//   border-radius: 0.25rem;
-//   width: 500px;
-//   .share-wrapper-header {
-//     padding: 0.75rem;
-//     border-bottom: 1px solid lightgray;
-//     color: #00509d;
-//     p {
-//       justify-content: center;
-//     }
-//   }
-//   .share-wrapper-body {
-//     padding: 1rem 1.5rem 1.5rem 1.5rem;
-//     color: #2e2e2e;
-//     p + p {
-//       margin-top: 0.75rem;
-//     }
-//   }
-//   .group {
-//     display: flex;
-//     align-items: center;
-//     i {
-//       font-size: 1.5rem;
-//     }
-//     span {
-//       margin-left: 0.5rem;
-//     }
-//   }
+
 #copy {
   --tooltip: "copy";
   cursor: pointer;
@@ -311,7 +273,6 @@ footer {
     }
   }
 }
-// }
 
 @media (max-width: 550px) {
   footer {
@@ -331,20 +292,6 @@ footer {
     }
   }
 }
-// @media (max-width: 620px) {
-//   :root {
-//     --footer-height: 175px;
-//   }
-//   footer {
-//     flex-direction: column;
-//     .btn-group {
-//       font-size: 1rem;
-//       i {
-//         font-size: 1.25rem;
-//       }
-//     }
-//   }
-// }
 
 // spinner
 .card-wrapper {
@@ -353,10 +300,12 @@ footer {
   left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 4;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.816);
+  user-select: none;
 }
 
 .card-loader {
@@ -368,128 +317,47 @@ footer {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 1.5rem;
 }
 
 .card-loader p {
+  padding-top: 2rem;
   color: white;
 }
 .spinner {
-  --animation-duration: 5000ms;
-  position: relative;
-  width: var(--size);
-  height: var(--size);
-  transform: rotate(45deg);
-
+  --animation-duration: 1150ms;
   .spinner-item {
-    --item-size: calc(var(--size) / 2.5);
-    position: absolute;
+    --item-size: calc(var(--size) / 4);
     width: var(--item-size);
     height: var(--item-size);
+    display: inline-block;
+    margin: 0 3px;
+    border-radius: 50%;
     border: 4px solid var(--clr-spinner);
+    animation: spinner4 var(--animation-duration) ease-in-out infinite;
+    @keyframes spinner4 {
+      0%,
+      100% {
+        transform: translateY(75%);
+      }
+      50% {
+        transform: translateY(-75%);
+      }
+    }
   }
-
   .spinner-item:nth-child(1) {
     --clr-spinner: var(--clr1);
-    top: 0;
-    left: 0;
-    animation: spinner3A var(--animation-duration) linear infinite;
-
-    @keyframes spinner3A {
-      0%,
-      8.33%,
-      16.66%,
-      100% {
-        transform: translate(0%, 0%);
-      }
-
-      24.99%,
-      33.32%,
-      41.65% {
-        transform: translate(100%, 0%);
-      }
-
-      49.98%,
-      58.31%,
-      66.64% {
-        transform: translate(100%, 100%);
-      }
-
-      74.97%,
-      83.30%,
-      91.63% {
-        transform: translate(0%, 100%);
-      }
-    }
+    animation-delay: calc(var(--animation-duration) / 6 * -1);
   }
-
   .spinner-item:nth-child(2) {
     --clr-spinner: var(--clr2);
-    top: 0;
-    left: var(--item-size);
-    animation: spinner3B var(--animation-duration) linear infinite;
-
-    @keyframes spinner3B {
-      0%,
-      8.33%,
-      91.63%,
-      100% {
-        transform: translate(0%, 0%);
-      }
-
-      16.66%,
-      24.99%,
-      33.32% {
-        transform: translate(0%, 100%);
-      }
-
-      41.65%,
-      49.98%,
-      58.31% {
-        transform: translate(-100%, 100%);
-      }
-
-      66.64%,
-      74.97%,
-      83.30% {
-        transform: translate(-100%, 0%);
-      }
-    }
+    animation-delay: calc(var(--animation-duration) / 6 * -2);
   }
-
   .spinner-item:nth-child(3) {
     --clr-spinner: var(--clr3);
-    top: var(--item-size);
-    left: var(--item-size);
-    animation: spinner3C var(--animation-duration) linear infinite;
-
-    @keyframes spinner3C {
-      0%,
-      83.30%,
-      91.63%,
-      100% {
-        transform: translate(0, 0);
-      }
-
-      8.33%,
-      16.66%,
-      24.99% {
-        transform: translate(-100%, 0);
-      }
-
-      33.32%,
-      41.65%,
-      49.98% {
-        transform: translate(-100%, -100%);
-      }
-
-      58.31%,
-      66.64%,
-      74.97% {
-        transform: translate(0, -100%);
-      }
-    }
+    animation-delay: calc(var(--animation-duration) / 6 * -3);
+  }
+  .spinner-item:nth-child(4) {
+    --clr-spinner: var(--clr4);
+    animation-delay: calc(var(--animation-duration) / 6 * -4);
   }
 }
-// @import url("https://fonts.googleapis.com/css?family=Poppins:400");
-// side nav

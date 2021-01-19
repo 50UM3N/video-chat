@@ -21,10 +21,11 @@ a {
   --color5: 4, 231, 98;
   --color6: 255, 47, 25;
   --footer-height: 80px;
-  --size: 95px;
-  --clr1: #198754;
-  --clr2: #dc3545;
-  --clr3: #ffc107;
+  --size: 75px;
+  --clr1: #2e2cb4;
+  --clr2: #4745ce;
+  --clr3: #6765cf;
+  --clr4: #8786df;
 }
 
 body,
@@ -362,6 +363,7 @@ footer .footer-wrapper .call-end-button ion-icon {
   left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 4;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -372,6 +374,10 @@ footer .footer-wrapper .call-end-button ion-icon {
       -ms-flex-align: center;
           align-items: center;
   background-color: rgba(0, 0, 0, 0.816);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .card-loader {
@@ -392,219 +398,74 @@ footer .footer-wrapper .call-end-button ion-icon {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  padding-top: 1.5rem;
 }
 
 .card-loader p {
+  padding-top: 2rem;
   color: white;
 }
 
 .spinner {
-  --animation-duration: 5000ms;
-  position: relative;
-  width: var(--size);
-  height: var(--size);
-  -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  --animation-duration: 1150ms;
 }
 
 .spinner .spinner-item {
-  --item-size: calc(var(--size) / 2.5);
-  position: absolute;
+  --item-size: calc(var(--size) / 4);
   width: var(--item-size);
   height: var(--item-size);
+  display: inline-block;
+  margin: 0 3px;
+  border-radius: 50%;
   border: 4px solid var(--clr-spinner);
+  -webkit-animation: spinner4 var(--animation-duration) ease-in-out infinite;
+          animation: spinner4 var(--animation-duration) ease-in-out infinite;
+}
+
+@-webkit-keyframes spinner4 {
+  0%,
+  100% {
+    -webkit-transform: translateY(75%);
+            transform: translateY(75%);
+  }
+  50% {
+    -webkit-transform: translateY(-75%);
+            transform: translateY(-75%);
+  }
+}
+
+@keyframes spinner4 {
+  0%,
+  100% {
+    -webkit-transform: translateY(75%);
+            transform: translateY(75%);
+  }
+  50% {
+    -webkit-transform: translateY(-75%);
+            transform: translateY(-75%);
+  }
 }
 
 .spinner .spinner-item:nth-child(1) {
   --clr-spinner: var(--clr1);
-  top: 0;
-  left: 0;
-  -webkit-animation: spinner3A var(--animation-duration) linear infinite;
-          animation: spinner3A var(--animation-duration) linear infinite;
-}
-
-@-webkit-keyframes spinner3A {
-  0%,
-  8.33%,
-  16.66%,
-  100% {
-    -webkit-transform: translate(0%, 0%);
-            transform: translate(0%, 0%);
-  }
-  24.99%,
-  33.32%,
-  41.65% {
-    -webkit-transform: translate(100%, 0%);
-            transform: translate(100%, 0%);
-  }
-  49.98%,
-  58.31%,
-  66.64% {
-    -webkit-transform: translate(100%, 100%);
-            transform: translate(100%, 100%);
-  }
-  74.97%,
-  83.30%,
-  91.63% {
-    -webkit-transform: translate(0%, 100%);
-            transform: translate(0%, 100%);
-  }
-}
-
-@keyframes spinner3A {
-  0%,
-  8.33%,
-  16.66%,
-  100% {
-    -webkit-transform: translate(0%, 0%);
-            transform: translate(0%, 0%);
-  }
-  24.99%,
-  33.32%,
-  41.65% {
-    -webkit-transform: translate(100%, 0%);
-            transform: translate(100%, 0%);
-  }
-  49.98%,
-  58.31%,
-  66.64% {
-    -webkit-transform: translate(100%, 100%);
-            transform: translate(100%, 100%);
-  }
-  74.97%,
-  83.30%,
-  91.63% {
-    -webkit-transform: translate(0%, 100%);
-            transform: translate(0%, 100%);
-  }
+  -webkit-animation-delay: calc(var(--animation-duration) / 6 * -1);
+          animation-delay: calc(var(--animation-duration) / 6 * -1);
 }
 
 .spinner .spinner-item:nth-child(2) {
   --clr-spinner: var(--clr2);
-  top: 0;
-  left: var(--item-size);
-  -webkit-animation: spinner3B var(--animation-duration) linear infinite;
-          animation: spinner3B var(--animation-duration) linear infinite;
-}
-
-@-webkit-keyframes spinner3B {
-  0%,
-  8.33%,
-  91.63%,
-  100% {
-    -webkit-transform: translate(0%, 0%);
-            transform: translate(0%, 0%);
-  }
-  16.66%,
-  24.99%,
-  33.32% {
-    -webkit-transform: translate(0%, 100%);
-            transform: translate(0%, 100%);
-  }
-  41.65%,
-  49.98%,
-  58.31% {
-    -webkit-transform: translate(-100%, 100%);
-            transform: translate(-100%, 100%);
-  }
-  66.64%,
-  74.97%,
-  83.30% {
-    -webkit-transform: translate(-100%, 0%);
-            transform: translate(-100%, 0%);
-  }
-}
-
-@keyframes spinner3B {
-  0%,
-  8.33%,
-  91.63%,
-  100% {
-    -webkit-transform: translate(0%, 0%);
-            transform: translate(0%, 0%);
-  }
-  16.66%,
-  24.99%,
-  33.32% {
-    -webkit-transform: translate(0%, 100%);
-            transform: translate(0%, 100%);
-  }
-  41.65%,
-  49.98%,
-  58.31% {
-    -webkit-transform: translate(-100%, 100%);
-            transform: translate(-100%, 100%);
-  }
-  66.64%,
-  74.97%,
-  83.30% {
-    -webkit-transform: translate(-100%, 0%);
-            transform: translate(-100%, 0%);
-  }
+  -webkit-animation-delay: calc(var(--animation-duration) / 6 * -2);
+          animation-delay: calc(var(--animation-duration) / 6 * -2);
 }
 
 .spinner .spinner-item:nth-child(3) {
   --clr-spinner: var(--clr3);
-  top: var(--item-size);
-  left: var(--item-size);
-  -webkit-animation: spinner3C var(--animation-duration) linear infinite;
-          animation: spinner3C var(--animation-duration) linear infinite;
+  -webkit-animation-delay: calc(var(--animation-duration) / 6 * -3);
+          animation-delay: calc(var(--animation-duration) / 6 * -3);
 }
 
-@-webkit-keyframes spinner3C {
-  0%,
-  83.30%,
-  91.63%,
-  100% {
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-  }
-  8.33%,
-  16.66%,
-  24.99% {
-    -webkit-transform: translate(-100%, 0);
-            transform: translate(-100%, 0);
-  }
-  33.32%,
-  41.65%,
-  49.98% {
-    -webkit-transform: translate(-100%, -100%);
-            transform: translate(-100%, -100%);
-  }
-  58.31%,
-  66.64%,
-  74.97% {
-    -webkit-transform: translate(0, -100%);
-            transform: translate(0, -100%);
-  }
-}
-
-@keyframes spinner3C {
-  0%,
-  83.30%,
-  91.63%,
-  100% {
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-  }
-  8.33%,
-  16.66%,
-  24.99% {
-    -webkit-transform: translate(-100%, 0);
-            transform: translate(-100%, 0);
-  }
-  33.32%,
-  41.65%,
-  49.98% {
-    -webkit-transform: translate(-100%, -100%);
-            transform: translate(-100%, -100%);
-  }
-  58.31%,
-  66.64%,
-  74.97% {
-    -webkit-transform: translate(0, -100%);
-            transform: translate(0, -100%);
-  }
+.spinner .spinner-item:nth-child(4) {
+  --clr-spinner: var(--clr4);
+  -webkit-animation-delay: calc(var(--animation-duration) / 6 * -4);
+          animation-delay: calc(var(--animation-duration) / 6 * -4);
 }
 /*# sourceMappingURL=style.css.map */

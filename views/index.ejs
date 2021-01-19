@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
+    <div class="container-fluid nav-contcnt">
         <a class="navbar-brand" href="#" style="color: #5F6368;"> <span style="font-weight: bold;">S</span> Meet</a>
         <div class="d-flex">
             <p class="m-0 px-3" style="font-weight: bold; color: #5F6368;">
@@ -19,6 +19,20 @@
             </a>
         </div>
         <style>
+            @media (max-width: 440px) {
+                .nav-contcnt {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .new-meeting {
+                    width: 124px;
+                    white-space: nowrap;
+                }
+            }
+
             .icon {
                 text-decoration: none;
                 color: #5F6368;
@@ -51,7 +65,7 @@
                 to make it free and
                 available for all.</p>
             <div class="a123 my-5" style="display: flex; ">
-                <a class="btn btn-primary" style="width: 180px;" href="/new-meeting" role="button">New
+                <a class="btn btn-primary new-meeting" style="width: 180px;" href="/new-meeting" role="button">New
                     Meeting</a>
                 <form action="join-room" style="margin-left: 1rem;" method="POST">
                     <div class="input-group ">
