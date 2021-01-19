@@ -75,7 +75,6 @@ app.use("/", videoRoom);
 
 io.on("connection", (socket) => {
   socket.to("join-room-screen", (roomId, userId, name) => {
-    console.log(name);
     users[userId] = name;
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("user-connected-screen", userId);
@@ -86,7 +85,6 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("join-room", (roomId, userId, name) => {
-    console.log(name);
     users[userId] = name;
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("user-connected", userId);
@@ -97,5 +95,4 @@ io.on("connection", (socket) => {
     });
   });
 });
-console.log(process.env.PORT);
 server.listen(process.env.PORT || 8080);
