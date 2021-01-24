@@ -13,21 +13,13 @@ function detectMob() {
     return navigator.userAgent.match(toMatchItem);
   });
 }
-// if (detectMob()) {
-//   const cont = document.querySelector("#share-screen");
-//   cont.remove();
-// }
-// if (!detectMob()) {
-//   const a = document.querySelector("#cams");
-//   a.remove();
-// }
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
 // const name = prompt("Your name");
 const myPeer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  // port: "8080",
+  port: "8080",
 });
 var Peer_ID;
 const myVideo = document.createElement("video");
@@ -79,12 +71,19 @@ function processStream(stream) {
     // console.log(peers);
     const video = document.createElement("video");
     call.on("stream", (userVideoStream) => {
-      fetch(`/user/${call.peer}`)
+      fetch(`/user?peer=${call.peer}&room=${ROOM_ID}`)
         .then((res) => {
           return res.json();
         })
         .then((data) => {
-          addVideoStream(video, userVideoStream, call.peer, data.name);
+          console.log(data.admin);
+          addVideoStream(
+            video,
+            userVideoStream,
+            call.peer,
+            data.name,
+            data.admin
+          );
         });
     });
     call.on("close", () => {
@@ -105,12 +104,18 @@ function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream);
   const video = document.createElement("video");
   call.on("stream", (userVideoStream) => {
-    fetch(`/user/${call.peer}`)
+    fetch(`/user?peer=${call.peer}&room=${ROOM_ID}`)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        addVideoStream(video, userVideoStream, call.peer, data.name);
+        addVideoStream(
+          video,
+          userVideoStream,
+          call.peer,
+          data.name,
+          data.admin
+        );
       });
   });
   call.on("close", () => {
@@ -120,7 +125,7 @@ function connectToNewUser(userId, stream) {
   // console.log(peers);
 }
 
-function addVideoStream(video, stream, peerId, peerName) {
+function addVideoStream(video, stream, peerId, peerName, adminId) {
   const micBtn = document.createElement("button");
   micBtn.classList.add("video-element");
   micBtn.classList.add("mic-button");
@@ -157,7 +162,9 @@ function addVideoStream(video, stream, peerId, peerName) {
   });
   videoWrapper.appendChild(elementsWrapper);
   videoWrapper.appendChild(video);
-  videoGrid.append(videoWrapper);
+  if (adminId == peerId) {
+    videoGrid.insertBefore(videoWrapper, videoGrid.childNodes[0]);
+  } else videoGrid.append(videoWrapper);
   const observer = new MutationObserver((mutationsList, observer) => {
     console.log({ mutationsList, observer });
     const removeNodeLength = mutationsList[0].removedNodes.length;
@@ -401,3 +408,61 @@ const replaceVideoTrack = (stream, videoTrack) => {
   stream.removeTrack(stream.getVideoTracks()[0]);
   stream.addTrack(videoTrack);
 };
+const recordingBtn = document.getElementById("recording-toggle");
+const chunks = [];
+var recorder;
+recordingBtn.addEventListener("click", (e) => {
+  const currentElement = e.target;
+  const indicator = document.querySelector(".recording-indicator");
+
+  // recording start
+  if (indicator == null) {
+    currentElement.setAttribute("tool_tip", "Stop Recording");
+    currentElement.classList.add("tooltip-danger");
+    currentElement.classList.add("blink");
+    const recordingElement = document.createElement("div");
+    recordingElement.classList.add("recording-indicator");
+    recordingElement.innerHTML = `<div></div>`;
+    myVideo.previousSibling.appendChild(recordingElement);
+    // recording
+    record(myVideoStream);
+    recorder.start(1000);
+  }
+  // recording stop
+  else {
+    const completeBlob = new Blob(chunks, { type: chunks[0].type });
+    var anchor = document.createElement("a");
+    document.body.appendChild(anchor);
+    anchor.style = "display: none";
+    var url = window.URL.createObjectURL(completeBlob);
+    anchor.href = url;
+    anchor.download = `aaaa.mp4`;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
+    recorder.stop();
+    currentElement.setAttribute("tool_tip", "Start Recording");
+    currentElement.classList.remove("tooltip-danger");
+    currentElement.classList.remove("blink");
+    indicator.remove();
+    while (chunks.length) {
+      chunks.pop();
+    }
+  }
+});
+
+const record = () => {
+  recorder = new MediaRecorder(myVideoStream, {
+    mineType: "video/webm;codecs=H264",
+  });
+  recorder.onstop = (e) => {
+    delete recorder;
+    console.log("stop");
+  };
+  recorder.ondataavailable = (e) => {
+    chunks.push(e.data);
+  };
+};
+
+if (detectMob()) shareScreenBtn.remove();
+else camToggleBtn.remove();
+if (USER_TYPE !== "admin") recordingBtn.remove();

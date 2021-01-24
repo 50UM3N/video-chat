@@ -105,6 +105,51 @@ body,
   outline: none;
 }
 
+#video-grid .video-wrapper .elements-wrapper .recording-indicator {
+  margin: 14px;
+  --size: 20px;
+  position: absolute;
+  top: 0;
+  left: 38px;
+  width: var(--size);
+  height: var(--size);
+  background-color: #ffffff8f;
+  border: 2px solid white;
+  border-radius: 50%;
+  -webkit-animation: blinker 2s linear infinite;
+          animation: blinker 2s linear infinite;
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#video-grid .video-wrapper .elements-wrapper .recording-indicator div {
+  --offset: 10px;
+  height: calc(var(--size) - var(--offset));
+  width: calc(var(--size) - var(--offset));
+  border-radius: 50%;
+  background-color: #fe634f;
+}
+
+@-webkit-keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
 #video-grid .video-wrapper .elements-wrapper .name {
   bottom: 0;
   left: 45px;
@@ -246,6 +291,24 @@ footer .footer-wrapper .call-button ion-icon {
 
 footer .footer-wrapper .call-end-button ion-icon {
   color: rgba(var(--color6), 1);
+}
+
+footer .footer-wrapper .blink ion-icon {
+  color: white;
+  -webkit-animation: blinker_color 3s linear infinite;
+          animation: blinker_color 3s linear infinite;
+}
+
+@-webkit-keyframes blinker_color {
+  50% {
+    color: #fe634f;
+  }
+}
+
+@keyframes blinker_color {
+  50% {
+    color: #fe634f;
+  }
 }
 
 @media (hover: hover) {

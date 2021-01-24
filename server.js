@@ -15,6 +15,7 @@ const peerServer = ExpressPeerServer(server, {
 });
 const { v4: uuidV4 } = require("uuid");
 var users = {};
+var rooms = {};
 
 const videoRoom = require("./routes/video");
 const signup = require("./routes/auth/signup");
@@ -52,10 +53,10 @@ app.post("/join-room", (req, res) => {
 app.use("/", index);
 
 // user id get
-app.get("/user/:id", (req, res) => {
-  console.log(users[req.params.id]);
+app.get("/user", (req, res) => {
   res.json({
-    name: users[req.params.id],
+    name: users[req.query.peer],
+    admin: rooms[req.query.room],
   });
 });
 // new meeting
@@ -86,6 +87,9 @@ io.on("connection", (socket) => {
   });
   socket.on("join-room", (roomId, userId, name) => {
     users[userId] = name;
+    console.log(rooms);
+    if (rooms.hasOwnProperty(roomId) == false) rooms[roomId] = userId;
+    console.log(rooms);
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("user-connected", userId);
 

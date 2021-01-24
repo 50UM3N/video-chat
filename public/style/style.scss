@@ -84,6 +84,35 @@ body,
           outline: none;
         }
       }
+      .recording-indicator {
+        margin: 14px;
+        --size: 20px;
+        position: absolute;
+        top: 0;
+        left: 38px;
+        width: var(--size);
+        height: var(--size);
+        background-color: #ffffff8f;
+        border: 2px solid white;
+        border-radius: 50%;
+        animation: blinker 2s linear infinite;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        div {
+          --offset: 10px;
+          height: calc(var(--size) - var(--offset));
+          width: calc(var(--size) - var(--offset));
+          border-radius: 50%;
+          background-color: #fe634f;
+        }
+      }
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
       .name {
         bottom: 0;
         left: 45px;
@@ -186,6 +215,15 @@ footer {
     }
     .call-end-button ion-icon {
       color: rgba(var(--color6), 1);
+    }
+    .blink ion-icon {
+      color: white;
+      animation: blinker_color 3s linear infinite;
+    }
+    @keyframes blinker_color {
+      50% {
+        color: #fe634f;
+      }
     }
     @media (hover: hover) {
       .footer-elements:hover {
