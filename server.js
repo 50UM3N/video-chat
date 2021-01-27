@@ -24,7 +24,7 @@ const logout = require("./routes/auth/logout");
 const index = require("./routes/index");
 const newMeeting = require("./routes/newMeeting");
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect(process.env.MONGO_LOCAL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -54,8 +54,9 @@ app.use("/", index);
 
 // user id get
 app.get("/user", (req, res) => {
+  console.log(users);
   res.json({
-    name: users[req.query.peer],
+    user: users[req.query.peer],
     admin: rooms[req.query.room],
   });
 });
@@ -85,14 +86,19 @@ io.on("connection", (socket) => {
       socket.to(roomId).broadcast.emit("user-disconnected", userId);
     });
   });
-  socket.on("join-room", (roomId, userId, name) => {
-    users[userId] = name;
+  socket.on("join-room", (roomId, userId, name, audio, video) => {
+    users[userId] = { name: name, audio: audio, video: video };
     console.log(rooms);
     if (rooms.hasOwnProperty(roomId) == false) rooms[roomId] = userId;
     console.log(rooms);
     socket.join(roomId);
-    socket.to(roomId).broadcast.emit("user-connected", userId);
-
+    socket
+      .to(roomId)
+      .broadcast.emit("user-connected", userId, name, audio, video);
+    socket.on("audio-mute", (type) => {
+      users[userId].audio = type;
+      socket.to(roomId).broadcast.emit("user-audio-mute", userId, type);
+    });
     socket.on("disconnect", () => {
       delete users.userId;
       socket.to(roomId).broadcast.emit("user-disconnected", userId);

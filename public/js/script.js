@@ -63,7 +63,11 @@ socket.on("user-disconnected", (userId) => {
 });
 
 function processStream(stream) {
-  addVideoStream(myVideo, myVideoStream, null, name);
+  addVideoStream(myVideo, myVideoStream, null, {
+    name: name,
+    audio: myVideoStream.getAudioTracks()[0].enabled,
+    video: myVideoStream.getVideoTracks()[0].enabled,
+  });
   // recieve the others stream
   myPeer.on("call", (call) => {
     peers[call.peer] = call;
@@ -76,12 +80,12 @@ function processStream(stream) {
           return res.json();
         })
         .then((data) => {
-          console.log(data.admin);
+          console.log(data);
           addVideoStream(
             video,
             userVideoStream,
             call.peer,
-            data.name,
+            data.user,
             data.admin
           );
         });
@@ -91,8 +95,10 @@ function processStream(stream) {
     });
   });
 
-  socket.on("user-connected", (userId) => {
+  socket.on("user-connected", (userId, fname, audio, video) => {
     // console.log("User Connected");
+    socket.emit("user-callback");
+    console.log(userId, fname, audio, video);
     connectToNewUser(userId, myVideoStream);
   });
 }
@@ -109,11 +115,12 @@ function connectToNewUser(userId, stream) {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         addVideoStream(
           video,
           userVideoStream,
           call.peer,
-          data.name,
+          data.user,
           data.admin
         );
       });
@@ -125,46 +132,58 @@ function connectToNewUser(userId, stream) {
   // console.log(peers);
 }
 
-function addVideoStream(video, stream, peerId, peerName, adminId) {
+function addVideoStream(video, stream, peerId, user, adminId) {
   const micBtn = document.createElement("button");
   micBtn.classList.add("video-element");
   micBtn.classList.add("mic-button");
-  micBtn.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
+  if (user.audio) micBtn.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
+  else micBtn.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
+
   const pinBtn = document.createElement("button");
   pinBtn.classList.add("video-element");
   pinBtn.classList.add("pin-button");
   pinBtn.innerHTML = `<ion-icon name="expand-outline"></ion-icon>`;
+
   const optionBtn = document.createElement("button");
   optionBtn.classList.add("video-element");
   optionBtn.classList.add("options-button");
   optionBtn.innerHTML = `<ion-icon name="ellipsis-horizontal-outline"></ion-icon>`;
+
   const videoWrapper = document.createElement("div");
   videoWrapper.id = "video-wrapper";
   videoWrapper.classList.add("video-wrapper");
+
   const namePara = document.createElement("p");
+  namePara.innerHTML = user.name;
+  namePara.classList.add("video-element");
+  namePara.classList.add("name");
+
   const elementsWrapper = document.createElement("div");
   elementsWrapper.classList.add("elements-wrapper");
   elementsWrapper.appendChild(namePara);
   elementsWrapper.appendChild(optionBtn);
   elementsWrapper.appendChild(pinBtn);
   elementsWrapper.appendChild(micBtn);
-  namePara.innerHTML = peerName;
-  namePara.classList.add("video-element");
-  namePara.classList.add("name");
+
   video.srcObject = stream;
   video.setAttribute("peer", peerId);
-  video.setAttribute("name", peerName);
+  video.setAttribute("name", user.name);
+
   if (peerId == null) {
     video.classList.add("mirror");
   }
+
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
+
   videoWrapper.appendChild(elementsWrapper);
   videoWrapper.appendChild(video);
-  if (adminId == peerId) {
+
+  if (adminId == peerId)
     videoGrid.insertBefore(videoWrapper, videoGrid.childNodes[0]);
-  } else videoGrid.append(videoWrapper);
+  else videoGrid.append(videoWrapper);
+
   const observer = new MutationObserver((mutationsList, observer) => {
     console.log({ mutationsList, observer });
     const removeNodeLength = mutationsList[0].removedNodes.length;
@@ -281,15 +300,30 @@ micToggleButton.addEventListener("click", (e) => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
   const currentElement = e.target;
   if (enabled) {
+    socket.emit("audio-mute", false);
+    videoWrapperMicToggle(myVideo, false);
     myVideoStream.getAudioTracks()[0].enabled = false;
     currentElement.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
     currentElement.setAttribute("tool_tip", "Microphone On");
   } else {
+    socket.emit("audio-mute", true);
+    videoWrapperMicToggle(myVideo, true);
     myVideoStream.getAudioTracks()[0].enabled = true;
     currentElement.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
     currentElement.setAttribute("tool_tip", "Microphone Off");
   }
 });
+
+socket.on("user-audio-mute", (id, type) => {
+  videoWrapperMicToggle(document.querySelector(`video[peer="${id}"]`), type);
+});
+
+const videoWrapperMicToggle = (element, type) => {
+  const videoWrapper = element.previousSibling;
+  const micButton = videoWrapper.lastChild;
+  if (type) micButton.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
+  else micButton.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
+};
 
 // const shareBtn = document.querySelector(".share-btn");
 // shareBtn.addEventListener("click", (e) => {
@@ -304,7 +338,14 @@ meetingToggleBtn.addEventListener("click", (e) => {
     currentElement.classList.add("call-end-button");
     currentElement.classList.add("tooltip-danger");
     currentElement.setAttribute("tool_tip", "Leave the Meeting");
-    socket.emit("join-room", ROOM_ID, Peer_ID, name);
+    socket.emit(
+      "join-room",
+      ROOM_ID,
+      Peer_ID,
+      name,
+      myVideoStream.getAudioTracks()[0].enabled,
+      myVideoStream.getVideoTracks()[0].enabled
+    );
   } else location.replace(`/`);
 });
 
@@ -450,8 +491,8 @@ recordingBtn.addEventListener("click", (e) => {
   }
 });
 
-const record = () => {
-  recorder = new MediaRecorder(myVideoStream, {
+const record = (stream) => {
+  recorder = new MediaRecorder(stream, {
     mineType: "video/webm;codecs=H264",
   });
   recorder.onstop = (e) => {
@@ -465,4 +506,4 @@ const record = () => {
 
 if (detectMob()) shareScreenBtn.remove();
 else camToggleBtn.remove();
-if (USER_TYPE !== "admin") recordingBtn.remove();
+// if (USER_TYPE !== "admin") recordingBtn.remove();
