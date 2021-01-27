@@ -19,11 +19,10 @@ const videoGrid = document.getElementById("video-grid");
 const myPeer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  port: "8080",
+  // port: "8080",
 });
 var Peer_ID;
 const myVideo = document.createElement("video");
-// console.log(myPeer);
 myVideo.muted = true;
 var myVideoStream;
 var myVideoTrack;
@@ -72,7 +71,6 @@ function processStream(stream) {
   myPeer.on("call", (call) => {
     peers[call.peer] = call;
     call.answer(myVideoStream);
-    // console.log(peers);
     const video = document.createElement("video");
     call.on("stream", (userVideoStream) => {
       fetch(`/user?peer=${call.peer}&room=${ROOM_ID}`)
@@ -80,7 +78,6 @@ function processStream(stream) {
           return res.json();
         })
         .then((data) => {
-          console.log(data);
           addVideoStream(
             video,
             userVideoStream,
@@ -96,9 +93,7 @@ function processStream(stream) {
   });
 
   socket.on("user-connected", (userId, fname, audio, video) => {
-    // console.log("User Connected");
     socket.emit("user-callback");
-    console.log(userId, fname, audio, video);
     connectToNewUser(userId, myVideoStream);
   });
 }
@@ -115,7 +110,6 @@ function connectToNewUser(userId, stream) {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         addVideoStream(
           video,
           userVideoStream,
@@ -129,7 +123,6 @@ function connectToNewUser(userId, stream) {
     video.parentElement.remove();
   });
   peers[userId] = call;
-  // console.log(peers);
 }
 
 function addVideoStream(video, stream, peerId, user, adminId) {
@@ -137,7 +130,10 @@ function addVideoStream(video, stream, peerId, user, adminId) {
   micBtn.classList.add("video-element");
   micBtn.classList.add("mic-button");
   if (user.audio) micBtn.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
-  else micBtn.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
+  else {
+    micBtn.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
+    micBtn.classList.add("mic-off");
+  }
 
   const pinBtn = document.createElement("button");
   pinBtn.classList.add("video-element");
@@ -185,7 +181,6 @@ function addVideoStream(video, stream, peerId, user, adminId) {
   else videoGrid.append(videoWrapper);
 
   const observer = new MutationObserver((mutationsList, observer) => {
-    console.log({ mutationsList, observer });
     const removeNodeLength = mutationsList[0].removedNodes.length;
     const targetNode = mutationsList[0].target;
     if (removeNodeLength > 0) {
@@ -321,6 +316,7 @@ socket.on("user-audio-mute", (id, type) => {
 const videoWrapperMicToggle = (element, type) => {
   const videoWrapper = element.previousSibling;
   const micButton = videoWrapper.lastChild;
+  micButton.classList.toggle("mic-off");
   if (type) micButton.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
   else micButton.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
 };
@@ -497,7 +493,6 @@ const record = (stream) => {
   });
   recorder.onstop = (e) => {
     delete recorder;
-    console.log("stop");
   };
   recorder.ondataavailable = (e) => {
     chunks.push(e.data);

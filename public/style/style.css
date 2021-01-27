@@ -84,7 +84,7 @@ body,
   display: -ms-flexbox;
   display: flex;
   padding: 6px;
-  background-color: rgba(var(--color1), 0.5);
+  background-color: rgba(var(--color1), 0.8);
   margin: 0.5rem;
   color: white;
   border-radius: 0.25rem;
@@ -167,6 +167,10 @@ body,
 
 #video-grid .video-wrapper .elements-wrapper .mic-button {
   bottom: 0;
+}
+
+#video-grid .video-wrapper .elements-wrapper .mic-off {
+  color: rgba(var(--color6), 1);
 }
 
 #video-grid .video-wrapper .elements-wrapper .stop-presenting-button {
@@ -402,7 +406,20 @@ footer .footer-wrapper .blink ion-icon {
   visibility: visible;
 }
 
+@media (max-width: 815px) {
+  #video-grid {
+    -ms-grid-columns: (minmax(250px, 1fr))[auto-fill];
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: 300px;
+  }
+}
+
 @media (max-width: 550px) {
+  #video-grid {
+    -ms-grid-columns: (minmax(250px, 1fr))[auto-fill];
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: 300px;
+  }
   footer {
     padding: 0 0.5rem;
   }

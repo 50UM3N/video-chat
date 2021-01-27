@@ -68,7 +68,7 @@ body,
         position: absolute;
         display: flex;
         padding: 6px;
-        background-color: rgba(var(--color1), 0.5);
+        background-color: rgba(var(--color1), 0.8);
         margin: 0.5rem;
         color: white;
         border-radius: 0.25rem;
@@ -127,6 +127,9 @@ body,
       }
       .mic-button {
         bottom: 0;
+      }
+      .mic-off {
+        color: rgba(var(--color6), 1);
       }
       .stop-presenting-button {
         top: 50%;
@@ -311,8 +314,17 @@ footer {
     }
   }
 }
-
+@media (max-width: 815px) {
+  #video-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: 300px;
+  }
+}
 @media (max-width: 550px) {
+  #video-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: 300px;
+  }
   footer {
     padding: 0 0.5rem;
     .footer-wrapper {

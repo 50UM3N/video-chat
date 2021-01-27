@@ -54,7 +54,6 @@ app.use("/", index);
 
 // user id get
 app.get("/user", (req, res) => {
-  console.log(users);
   res.json({
     user: users[req.query.peer],
     admin: rooms[req.query.room],
@@ -76,21 +75,9 @@ app.use("/logout", logout);
 app.use("/", videoRoom);
 
 io.on("connection", (socket) => {
-  socket.to("join-room-screen", (roomId, userId, name) => {
-    users[userId] = name;
-    socket.join(roomId);
-    socket.to(roomId).broadcast.emit("user-connected-screen", userId);
-
-    socket.on("disconnect", () => {
-      delete users.userId;
-      socket.to(roomId).broadcast.emit("user-disconnected", userId);
-    });
-  });
   socket.on("join-room", (roomId, userId, name, audio, video) => {
     users[userId] = { name: name, audio: audio, video: video };
-    console.log(rooms);
     if (rooms.hasOwnProperty(roomId) == false) rooms[roomId] = userId;
-    console.log(rooms);
     socket.join(roomId);
     socket
       .to(roomId)
