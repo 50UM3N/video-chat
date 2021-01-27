@@ -24,7 +24,7 @@ const logout = require("./routes/auth/logout");
 const index = require("./routes/index");
 const newMeeting = require("./routes/newMeeting");
 mongoose
-  .connect(process.env.MONGO_LOCAL, {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
