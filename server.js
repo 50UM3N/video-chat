@@ -56,7 +56,7 @@ app.use("/", index);
 app.get("/user", (req, res) => {
   res.json({
     user: users[req.query.peer],
-    admin: rooms[req.query.room],
+    admin: rooms[req.query.room].admin,
   });
 });
 // new meeting
@@ -72,23 +72,47 @@ app.use("/signup", signup);
 app.use("/logout", logout);
 
 // video room
-app.use("/", videoRoom);
+const { authorize } = require("./functions/authFunc");
+app.get("/:room", authorize, (req, res) => {
+  res.render("room", {
+    tabName: "S-Meet",
+    count:
+      rooms[req.params.room] == undefined ? "0" : rooms[req.params.room].count,
+    layout: "layouts/videoLayout",
+    roomId: req.params.room,
+    screen: req.query.screen,
+    user: req.user,
+  });
+});
 
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, name, audio, video) => {
     users[userId] = { name: name, audio: audio, video: video };
-    if (rooms.hasOwnProperty(roomId) == false) rooms[roomId] = userId;
+    if (rooms.hasOwnProperty(roomId) == false)
+      rooms[roomId] = { admin: userId };
+    rooms[roomId].count =
+      rooms[roomId].count == undefined ? 1 : rooms[roomId].count + 1;
     socket.join(roomId);
     socket
       .to(roomId)
-      .broadcast.emit("user-connected", userId, name, audio, video);
+      .broadcast.emit(
+        "user-connected",
+        userId,
+        name,
+        audio,
+        video,
+        rooms[roomId].count
+      );
     socket.on("audio-mute", (type) => {
       users[userId].audio = type;
       socket.to(roomId).broadcast.emit("user-audio-mute", userId, type);
     });
     socket.on("disconnect", () => {
       delete users.userId;
-      socket.to(roomId).broadcast.emit("user-disconnected", userId);
+      rooms[roomId].count -= 1;
+      socket
+        .to(roomId)
+        .broadcast.emit("user-disconnected", userId, rooms[roomId].count);
     });
   });
 });

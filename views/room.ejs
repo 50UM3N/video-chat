@@ -4,6 +4,12 @@
 <footer>
   <div class="footer-wrapper">
     <div class="footer-elements-wrapper">
+      <button id="peoples-count" class="footer-elements tooltip" tool_tip="Share Meeting link">
+        <ion-icon name="people-outline"></ion-icon>
+        <span class="user-number" style="font-size: .75rem;" id="user-number">
+          <%= count %>
+        </span>
+      </button>
       <button id="share-toggle" class="footer-elements tooltip" tool_tip="Share Meeting link">
         <ion-icon name="paper-plane-outline"></ion-icon>
       </button>

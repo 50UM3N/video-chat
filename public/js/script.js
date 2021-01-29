@@ -54,10 +54,11 @@ navigator.mediaDevices
       });
   });
 
-socket.on("user-disconnected", (userId) => {
+socket.on("user-disconnected", (userId, count) => {
   if (peers[userId]) {
     peers[userId].close();
     delete peers[userId];
+    changeCount(count);
   }
 });
 
@@ -92,14 +93,19 @@ function processStream(stream) {
     });
   });
 
-  socket.on("user-connected", (userId, fname, audio, video) => {
+  socket.on("user-connected", (userId, fname, audio, video, count) => {
     socket.emit("user-callback");
     connectToNewUser(userId, myVideoStream);
+    changeCount(count);
   });
 }
 myPeer.on("open", (id) => {
   Peer_ID = id;
 });
+const changeCount = (count) => {
+  const counter = document.getElementById("user-number");
+  counter.innerHTML = count;
+};
 function connectToNewUser(userId, stream) {
   // set others peerid and send my stream
   const call = myPeer.call(userId, stream);
@@ -329,7 +335,10 @@ const videoWrapperMicToggle = (element, type) => {
 const meetingToggleBtn = document.getElementById("meeting-toggle");
 meetingToggleBtn.addEventListener("click", (e) => {
   const currentElement = e.target;
+  const counter = document.getElementById("user-number");
+  const count = Number(counter.innerText) + 1;
   if (currentElement.classList.contains("call-button")) {
+    changeCount(count);
     currentElement.classList.remove("call-button");
     currentElement.classList.add("call-end-button");
     currentElement.classList.add("tooltip-danger");
