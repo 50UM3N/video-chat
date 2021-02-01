@@ -508,6 +508,6 @@ const record = (stream) => {
   };
 };
 
-// if (detectMob()) shareScreenBtn.remove();
-// else camToggleBtn.remove();
+if (detectMob()) shareScreenBtn.remove();
+else camToggleBtn.remove();
 // if (USER_TYPE !== "admin") recordingBtn.remove();
