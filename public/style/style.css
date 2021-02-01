@@ -138,6 +138,35 @@ body,
   background-color: #fe634f;
 }
 
+#video-grid .video-wrapper .elements-wrapper .effect-container {
+  margin: 0.5rem;
+  width: 32.8px;
+  height: 32.8px;
+  position: absolute;
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#video-grid .video-wrapper .elements-wrapper .effect-container .o1,
+#video-grid .video-wrapper .elements-wrapper .effect-container .o2 {
+  position: relative;
+  height: 19%;
+  width: 6px;
+  background: rgba(var(--color3), 1);
+  margin: 2px;
+  border-radius: 200px;
+  -webkit-transition: all linear 0.1s;
+  transition: all linear 0.1s;
+}
+
 @-webkit-keyframes blinker {
   50% {
     opacity: 0;
@@ -167,6 +196,12 @@ body,
 
 #video-grid .video-wrapper .elements-wrapper .mic-button {
   bottom: 0;
+}
+
+#video-grid .video-wrapper .elements-wrapper .off {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 #video-grid .video-wrapper .elements-wrapper .mic-off {

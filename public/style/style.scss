@@ -108,6 +108,26 @@ body,
           background-color: #fe634f;
         }
       }
+      .effect-container {
+        margin: 0.5rem;
+        width: 32.8px;
+        height: 32.8px;
+        position: absolute;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .o1,
+        .o2 {
+          position: relative;
+          height: 19%;
+          width: 6px;
+          background: rgba(var(--color3), 1);
+          margin: 2px;
+          border-radius: 200px;
+          transition: all linear 0.1s;
+        }
+      }
       @keyframes blinker {
         50% {
           opacity: 0;
@@ -127,6 +147,11 @@ body,
       }
       .mic-button {
         bottom: 0;
+      }
+      .off {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
       }
       .mic-off {
         color: rgba(var(--color6), 1);

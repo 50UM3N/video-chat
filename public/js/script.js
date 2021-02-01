@@ -19,7 +19,7 @@ const videoGrid = document.getElementById("video-grid");
 const myPeer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  // port: "8080",
+  // port: "3000",
 });
 var Peer_ID;
 const myVideo = document.createElement("video");
@@ -135,11 +135,15 @@ function addVideoStream(video, stream, peerId, user, adminId) {
   const micBtn = document.createElement("button");
   micBtn.classList.add("video-element");
   micBtn.classList.add("mic-button");
-  if (user.audio) micBtn.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
-  else {
-    micBtn.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
-    micBtn.classList.add("mic-off");
-  }
+  micBtn.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
+  micBtn.classList.add("mic-off");
+
+  const audioFX = new SE(stream);
+  const audioFXElement = audioFX.createElement();
+  audioFXElement.classList.add("mic-button");
+
+  if (user.audio) micBtn.classList.add("off");
+  else audioFXElement.classList.add("off");
 
   const pinBtn = document.createElement("button");
   pinBtn.classList.add("video-element");
@@ -166,6 +170,7 @@ function addVideoStream(video, stream, peerId, user, adminId) {
   elementsWrapper.appendChild(optionBtn);
   elementsWrapper.appendChild(pinBtn);
   elementsWrapper.appendChild(micBtn);
+  elementsWrapper.appendChild(audioFXElement);
 
   video.srcObject = stream;
   video.setAttribute("peer", peerId);
@@ -321,10 +326,14 @@ socket.on("user-audio-mute", (id, type) => {
 
 const videoWrapperMicToggle = (element, type) => {
   const videoWrapper = element.previousSibling;
-  const micButton = videoWrapper.lastChild;
-  micButton.classList.toggle("mic-off");
-  if (type) micButton.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
-  else micButton.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
+  const micButtons = videoWrapper.childNodes;
+  if (type) {
+    micButtons[4].classList.remove("off");
+    micButtons[3].classList.add("off");
+  } else {
+    micButtons[3].classList.remove("off");
+    micButtons[4].classList.add("off");
+  }
 };
 
 // const shareBtn = document.querySelector(".share-btn");
@@ -510,4 +519,49 @@ const record = (stream) => {
 
 if (detectMob()) shareScreenBtn.remove();
 else camToggleBtn.remove();
+class SE {
+  constructor(mediaStream) {
+    this.mediaStream = mediaStream;
+  }
+  createElement() {
+    this.element = document.createElement("div");
+    this.element.classList.add("effect-container");
+    const a1 = document.createElement("div");
+    a1.classList.add("o1");
+    const a2 = document.createElement("div");
+    a2.classList.add("o2");
+    const a3 = document.createElement("div");
+    a3.classList.add("o1");
+    this.element.appendChild(a1);
+    this.element.appendChild(a2);
+    this.element.appendChild(a3);
+
+    this.audioCTX = new AudioContext();
+    this.analyser = this.audioCTX.createAnalyser();
+    console.log(this.audioCTX);
+    const source = this.audioCTX.createMediaStreamSource(this.mediaStream);
+    source.connect(this.analyser);
+
+    const frameLoop = () => {
+      window.requestAnimationFrame(frameLoop);
+      let fbc_array = new Uint8Array(this.analyser.frequencyBinCount);
+      this.analyser.getByteFrequencyData(fbc_array);
+      let o1 = fbc_array[20] / 300;
+      let o2 = fbc_array[50] / 200;
+      o1 = o1 < 0.5 ? 0.19 : o1 > 1 ? 1 : o1;
+      o2 = o2 < 0.4 ? 0.19 : o2 > 1 ? 1 : o2;
+      a1.style.height = `${o1 * 100}%`;
+      a3.style.height = `${o1 * 100}%`;
+      a2.style.height = `${o2 * 100}%`;
+    };
+    frameLoop();
+    return this.element;
+  }
+  deleteElement() {
+    this.audioCTX.close().then((e) => {
+      console.log("audiCTX close");
+    });
+    this.element.remove();
+  }
+}
 // if (USER_TYPE !== "admin") recordingBtn.remove();
