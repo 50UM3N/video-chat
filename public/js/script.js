@@ -132,12 +132,14 @@ function connectToNewUser(userId, stream) {
 }
 
 function addVideoStream(video, stream, peerId, user, adminId) {
+  // create microphone button
   const micBtn = document.createElement("button");
   micBtn.classList.add("video-element");
   micBtn.classList.add("mic-button");
   micBtn.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
   micBtn.classList.add("mic-off");
 
+  // create audio FX
   const audioFX = new SE(stream);
   const audioFXElement = audioFX.createElement();
   audioFXElement.classList.add("mic-button");
@@ -145,20 +147,29 @@ function addVideoStream(video, stream, peerId, user, adminId) {
   if (user.audio) micBtn.classList.add("off");
   else audioFXElement.classList.add("off");
 
+  // video off element
+  const videoOffIndicator = document.createElement("div");
+  videoOffIndicator.classList.add("video-off-indicator");
+  videoOffIndicator.innerHTML = `<ion-icon name="videocam-outline"></ion-icon>`;
+
+  // create pin button
   const pinBtn = document.createElement("button");
   pinBtn.classList.add("video-element");
   pinBtn.classList.add("pin-button");
   pinBtn.innerHTML = `<ion-icon name="expand-outline"></ion-icon>`;
 
-  const optionBtn = document.createElement("button");
-  optionBtn.classList.add("video-element");
-  optionBtn.classList.add("options-button");
-  optionBtn.innerHTML = `<ion-icon name="ellipsis-horizontal-outline"></ion-icon>`;
+  // create option button
+  // const optionBtn = document.createElement("button");
+  // optionBtn.classList.add("video-element");
+  // optionBtn.classList.add("options-button");
+  // optionBtn.innerHTML = `<ion-icon name="ellipsis-horizontal-outline"></ion-icon>`;
 
+  // main wrapper
   const videoWrapper = document.createElement("div");
   videoWrapper.id = "video-wrapper";
   videoWrapper.classList.add("video-wrapper");
 
+  // peer name
   const namePara = document.createElement("p");
   namePara.innerHTML = user.name;
   namePara.classList.add("video-element");
@@ -167,10 +178,11 @@ function addVideoStream(video, stream, peerId, user, adminId) {
   const elementsWrapper = document.createElement("div");
   elementsWrapper.classList.add("elements-wrapper");
   elementsWrapper.appendChild(namePara);
-  elementsWrapper.appendChild(optionBtn);
+  // elementsWrapper.appendChild(optionBtn);
   elementsWrapper.appendChild(pinBtn);
   elementsWrapper.appendChild(micBtn);
   elementsWrapper.appendChild(audioFXElement);
+  elementsWrapper.appendChild(videoOffIndicator);
 
   video.srcObject = stream;
   video.setAttribute("peer", peerId);
@@ -292,27 +304,37 @@ videoToggleBtn.addEventListener("click", (e) => {
   const currentElement = e.target;
   if (enabled) {
     myVideoStream.getVideoTracks()[0].enabled = false;
+    socket.emit("video-toggle", false);
+    videoWrapperVideoToggle(myVideo, false);
     currentElement.innerHTML = `<ion-icon name="videocam-off-outline"></ion-icon>`;
     currentElement.setAttribute("tool_tip", "Video On");
   } else {
     myVideoStream.getVideoTracks()[0].enabled = true;
+    socket.emit("video-toggle", true);
+    videoWrapperVideoToggle(myVideo, true);
     currentElement.innerHTML = `<ion-icon name="videocam-outline"></ion-icon>`;
     currentElement.setAttribute("tool_tip", "Video Off");
   }
 });
+
+const videoWrapperVideoToggle = (element, type) => {
+  const videoWrapper = element.previousSibling;
+  if (type) videoWrapper.classList.remove("video-disable");
+  else videoWrapper.classList.add("video-disable");
+};
 
 const micToggleButton = document.getElementById("mic-toggle");
 micToggleButton.addEventListener("click", (e) => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
   const currentElement = e.target;
   if (enabled) {
-    socket.emit("audio-mute", false);
+    socket.emit("audio-toggle", false);
     videoWrapperMicToggle(myVideo, false);
     myVideoStream.getAudioTracks()[0].enabled = false;
     currentElement.innerHTML = `<ion-icon name="mic-off-outline"></ion-icon>`;
     currentElement.setAttribute("tool_tip", "Microphone On");
   } else {
-    socket.emit("audio-mute", true);
+    socket.emit("audio-toggle", true);
     videoWrapperMicToggle(myVideo, true);
     myVideoStream.getAudioTracks()[0].enabled = true;
     currentElement.innerHTML = `<ion-icon name="mic-outline"></ion-icon>`;
@@ -320,8 +342,12 @@ micToggleButton.addEventListener("click", (e) => {
   }
 });
 
-socket.on("user-audio-mute", (id, type) => {
+socket.on("user-audio-toggle", (id, type) => {
   videoWrapperMicToggle(document.querySelector(`video[peer="${id}"]`), type);
+});
+
+socket.on("user-video-toggle", (id, type) => {
+  videoWrapperVideoToggle(document.querySelector(`video[peer="${id}"]`), type);
 });
 
 const videoWrapperMicToggle = (element, type) => {

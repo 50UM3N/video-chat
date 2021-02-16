@@ -103,9 +103,13 @@ io.on("connection", (socket) => {
         video,
         rooms[roomId].count
       );
-    socket.on("audio-mute", (type) => {
+    socket.on("audio-toggle", (type) => {
       users[userId].audio = type;
-      socket.to(roomId).broadcast.emit("user-audio-mute", userId, type);
+      socket.to(roomId).broadcast.emit("user-audio-toggle", userId, type);
+    });
+    socket.on("video-toggle", (type) => {
+      users[userId].video = type;
+      socket.to(roomId).broadcast.emit("user-video-toggle", userId, type);
     });
     socket.on("disconnect", () => {
       delete users.userId;

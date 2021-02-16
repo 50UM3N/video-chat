@@ -4,12 +4,6 @@
 <footer>
   <div class="footer-wrapper">
     <div class="footer-elements-wrapper">
-      <button id="peoples-count" class="footer-elements tooltip" tool_tip="Share Meeting link">
-        <ion-icon name="people-outline"></ion-icon>
-        <span class="user-number" style="font-size: .75rem;" id="user-number">
-          <%= count %>
-        </span>
-      </button>
       <button id="share-toggle" class="footer-elements tooltip" tool_tip="Share Meeting link">
         <ion-icon name="paper-plane-outline"></ion-icon>
       </button>
@@ -39,8 +33,71 @@
       </button>
     </div>
   </div>
-
 </footer>
+<div class="tool-bar-wrapper">
+  <button id="peoples-count" class="tool-bar-button">
+    <ion-icon name="people-outline"></ion-icon>
+    <span class="user-number" id="user-number">
+      <%= count %>
+    </span>
+  </button>
+  <button id="time" class="tool-bar-button">
+    12:12 PM
+  </button>
+</div>
+<div class="dialogue-container">
+  <div class="dialogue-head">
+    <p class="dialogue-title">Your meeting's ready</p>
+    <button id="close-dialogue" class="dialogue-button">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+  <div class="dialogue-body">
+    <p>Share this meeting link with others you want in the meeting</p>
+    <div class="share-container">
+      <p class="share-link">meet.google.com/sij-dwa-zjm</p>
+      <button id="copy-button" class="dialogue-button tooltip" tool_tip="copy"
+        meeting_link="meet.google.com/sij-dwa-zjm">
+        <ion-icon name="copy-outline"></ion-icon>
+      </button>
+    </div>
+    <p class="caption">Joined as <%= user.name %>
+    </p>
+  </div>
+</div>
+<script>
+  const setTime = () => {
+    const timeButton = document.getElementById('time')
+    var time = new Date();
+    timeButton.innerHTML = `${time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`
+  }
+  setTime()
+  setInterval(() => {
+    setTime()
+  }, 500);
+  const shareToggleButton = document.getElementById('share-toggle')
+  shareToggleButton.addEventListener('click', e => {
+    const dialogue = document.querySelector('.dialogue-container')
+    dialogue.classList.toggle('dialogue-active')
+  })
+  const copyButton = document.querySelector('#copy-button')
+  const shareLink = document.querySelector('.share-link')
+  shareLink.innerHTML = window.location.href
+  copyButton.setAttribute('meeting_link', window.location.href)
+  const dialogueCloseButton = document.querySelector('#close-dialogue')
+  dialogueCloseButton.addEventListener('click', (e) => {
+    const dialogue = document.querySelector('.dialogue-container')
+    dialogue.classList.toggle('dialogue-active')
+  })
+  copyButton.addEventListener("mousedown", (e) => {
+    const copyText = e.target.getAttribute('meeting_link')
+    navigator.clipboard.writeText(copyText);
+    e.target.setAttribute("tool_tip", 'copied');
+  });
+  copyButton.addEventListener("mouseout", (e) => {
+    e.target.setAttribute("tool_tip", 'copy');
+  });
+</script>
 <script>
   const cameraBtn = document.querySelector('#cams-toggle')
   cam = {}
