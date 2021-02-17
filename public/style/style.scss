@@ -458,7 +458,6 @@ footer {
 }
 // chad box
 .chat-box-wrapper {
-  --box-width: 350px;
   font-family: "Open Sans", sans-serif;
   opacity: 1;
   visibility: hidden;
@@ -572,6 +571,15 @@ footer {
   transition-delay: 0.24s;
 }
 
+@media (max-width: 425px) {
+  .chat-box-wrapper {
+    right: -100%;
+    width: 100%;
+  }
+  .display-chat-panel {
+    right: 0%;
+  }
+}
 /* .chat-box-control {
   box-shadow: 0px 3px 3px 3px black;
 } */
@@ -739,7 +747,7 @@ span.time {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 4;
+  z-index: 99999999;
   display: flex;
   justify-content: center;
   align-items: center;
