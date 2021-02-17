@@ -591,3 +591,42 @@ class SE {
   }
 }
 // if (USER_TYPE !== "admin") recordingBtn.remove();
+const scrollDown = (query) => {
+  var objDiv = document.querySelector(query);
+  objDiv.scrollTop = objDiv.scrollHeight;
+};
+const addMessage = (sender, userName, message) => {
+  const messageBoxButton = document.getElementById("message-box");
+  const chatPanel = document.getElementById("chat-panel");
+  if (
+    !chatPanel.classList.contains("display-chat-panel") &&
+    !messageBoxButton.classList.contains("dot")
+  )
+    messageBoxButton.classList.add("dot");
+  const time = new Date();
+  const chatBox = document.querySelector(".chat-box");
+  const chat = document.createElement("div");
+  chat.classList.add("chat");
+  chat.classList.add(sender);
+  chat.innerHTML = `<p class="name">${userName} <span class="time"> ${time.toLocaleString(
+    "en-US",
+    { hour: "numeric", minute: "numeric", hour12: true }
+  )} </span> </p><p class="message">${message}</p>`;
+  chatBox.appendChild(chat);
+};
+const chatForm = document.querySelector(".chat-input-wrapper");
+chatForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const chatInput = document.getElementById("chat-input");
+  if (chatInput.value == "") return;
+  socket.emit("client-send", chatInput.value);
+  addMessage("me", name, chatInput.value);
+  scrollDown(".chat-box");
+  chatInput.value = "";
+});
+
+socket.on("client-podcast", (data, userName) => {
+  console.log(userName + ": " + data);
+  addMessage("user", userName, data);
+  scrollDown(".chat-box");
+});

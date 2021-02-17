@@ -41,8 +41,11 @@
       <%= count %>
     </span>
   </button>
+  <button id="message-box" class="tool-bar-button">
+    <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+  </button>
   <button id="time" class="tool-bar-button">
-    12:12 PM
+    00:00 AM
   </button>
 </div>
 <div class="dialogue-container">
@@ -65,6 +68,53 @@
     </p>
   </div>
 </div>
+<div id="chat-panel" class="chat-box-wrapper">
+  <div class="chat-box-header">
+    <div class="chat-box-headline">
+      <ion-icon name="chatbox-outline"></ion-icon>
+      <span>Chat</span>
+    </div>
+    <button id="chat-close-button" class="cross-button">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+  <div class="chat-box">
+
+  </div>
+  <div class="chat-box-control">
+    <form class="chat-input-wrapper">
+      <div class="input-box-wrapper" chat-id="asdf">
+        <input type="text" class="chat-input" id="chat-input" placeholder="Send Message">
+      </div>
+      <button type="submit" class="chat-input-button">
+        <ion-icon name="send-outline"></ion-icon>
+      </button>
+    </form>
+  </div>
+</div>
+<script>
+
+
+</script>
+<script>
+  const messageBoxButton = document.getElementById('message-box')
+  const chatCloseButton = document.getElementById('chat-close-button')
+  chatCloseButton.addEventListener('click', e => {
+
+    const chatPanel = document.getElementById('chat-panel')
+    const toolBarWrapper = document.querySelector('.tool-bar-wrapper')
+    toolBarWrapper.classList.toggle('hide-tool-bar')
+    chatPanel.classList.toggle('display-chat-panel')
+  })
+  messageBoxButton.addEventListener('click', e => {
+    if (e.target.classList.contains('dot'))
+      e.target.classList.remove('dot')
+    const chatPanel = document.getElementById('chat-panel')
+    const toolBarWrapper = document.querySelector('.tool-bar-wrapper')
+    toolBarWrapper.classList.toggle('hide-tool-bar')
+    chatPanel.classList.toggle('display-chat-panel')
+  })
+</script>
 <script>
   const setTime = () => {
     const timeButton = document.getElementById('time')

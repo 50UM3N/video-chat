@@ -111,6 +111,10 @@ io.on("connection", (socket) => {
       users[userId].video = type;
       socket.to(roomId).broadcast.emit("user-video-toggle", userId, type);
     });
+    // chat
+    socket.on("client-send", (data) => {
+      socket.to(roomId).broadcast.emit("client-podcast", data, name);
+    });
     socket.on("disconnect", () => {
       delete users.userId;
       rooms[roomId].count -= 1;
