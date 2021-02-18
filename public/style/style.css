@@ -540,6 +540,8 @@ footer .footer-wrapper .blink ion-icon {
   top: 0;
   right: 0;
   background-color: white;
+  -webkit-box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
   height: 50px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -627,6 +629,8 @@ footer .footer-wrapper .blink ion-icon {
 
 .chat-box-wrapper {
   font-family: "Open Sans", sans-serif;
+  -webkit-box-shadow: 0 0px 10px rgba(var(--clr1), 0.3);
+          box-shadow: 0 0px 10px rgba(var(--clr1), 0.3);
   opacity: 1;
   visibility: hidden;
   pointer-events: none;

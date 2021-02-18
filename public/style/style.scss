@@ -390,12 +390,14 @@ footer {
   pointer-events: all;
   visibility: visible;
 }
+// toolbar
 .tool-bar-wrapper {
   z-index: 300000;
   position: absolute;
   top: 0;
   right: 0;
   background-color: white;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
   height: 50px;
   display: flex;
   align-items: center;
@@ -462,6 +464,7 @@ footer {
 // chad box
 .chat-box-wrapper {
   font-family: "Open Sans", sans-serif;
+  box-shadow: 0 0px 10px rgba(var(--clr1), 0.3);
   opacity: 1;
   visibility: hidden;
   pointer-events: none;
