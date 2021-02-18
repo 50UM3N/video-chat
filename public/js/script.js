@@ -19,7 +19,7 @@ const videoGrid = document.getElementById("video-grid");
 const myPeer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  // port: "3000",
+  port: "3000",
 });
 var Peer_ID;
 const myVideo = document.createElement("video");
@@ -130,7 +130,7 @@ function connectToNewUser(userId, stream) {
   });
   peers[userId] = call;
 }
-
+var localAudioFXElement;
 function addVideoStream(video, stream, peerId, user, adminId) {
   // create microphone button
   const micBtn = document.createElement("button");
@@ -190,6 +190,7 @@ function addVideoStream(video, stream, peerId, user, adminId) {
 
   if (peerId == null) {
     video.classList.add("mirror");
+    localAudioFXElement = audioFX;
   }
 
   video.addEventListener("loadedmetadata", () => {
@@ -354,11 +355,11 @@ const videoWrapperMicToggle = (element, type) => {
   const videoWrapper = element.previousSibling;
   const micButtons = videoWrapper.childNodes;
   if (type) {
-    micButtons[4].classList.remove("off");
-    micButtons[3].classList.add("off");
-  } else {
     micButtons[3].classList.remove("off");
-    micButtons[4].classList.add("off");
+    micButtons[2].classList.add("off");
+  } else {
+    micButtons[2].classList.remove("off");
+    micButtons[3].classList.add("off");
   }
 };
 
@@ -425,6 +426,7 @@ camToggleBtn.addEventListener("click", (e) => {
     })
     .then((stream) => {
       myVideoStream = stream;
+      localAudioFXElement.replaceStream(stream);
       let videoTrack = stream.getVideoTracks()[0];
       let audioTrack = stream.getAudioTracks()[0];
       myVideo.srcObject = stream;
@@ -583,6 +585,13 @@ class SE {
     };
     frameLoop();
     return this.element;
+  }
+  replaceStream(stream) {
+    this.mediaStream = stream;
+    this.audioCTX.close().then((e) => {
+      console.log("audiCTX close");
+    });
+    this.element = this.createElement();
   }
   deleteElement() {
     this.audioCTX.close().then((e) => {
