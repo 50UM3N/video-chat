@@ -13,9 +13,8 @@ const user = require("./schema/user");
 const peerServer = ExpressPeerServer(server, {
   debug: true,
 });
-const { v4: uuidV4 } = require("uuid");
-var users = {};
-var rooms = {};
+const peerUser = require("./schema/peerUser");
+const room = require("./schema/rooms");
 
 const videoRoom = require("./routes/video");
 const signup = require("./routes/auth/signup");
@@ -53,10 +52,11 @@ app.post("/join-room", (req, res) => {
 app.use("/", index);
 
 // user id get
-app.get("/user", (req, res) => {
+app.get("/user", async (req, res) => {
+  const roomData = await room.findOne({ roomId: req.query.room }).exec();
   res.json({
-    user: users[req.query.peer],
-    admin: rooms[req.query.room].admin,
+    user: await peerUser.findOne({ peerId: req.query.peer }).exec(),
+    admin: roomData.admin,
   });
 });
 // new meeting
@@ -72,55 +72,66 @@ app.use("/signup", signup);
 app.use("/logout", logout);
 
 // video room
-const { authorize } = require("./functions/authFunc");
-app.get("/:room", authorize, (req, res) => {
-  res.render("room", {
-    tabName: "S-Meet",
-    count:
-      rooms[req.params.room] == undefined ? "0" : rooms[req.params.room].count,
-    layout: "layouts/videoLayout",
-    roomId: req.params.room,
-    screen: req.query.screen,
-    user: req.user,
-  });
-});
+app.use("/", videoRoom);
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, name, audio, video) => {
-    users[userId] = { name: name, audio: audio, video: video };
-    if (rooms.hasOwnProperty(roomId) == false)
-      rooms[roomId] = { admin: userId };
-    rooms[roomId].count =
-      rooms[roomId].count == undefined ? 1 : rooms[roomId].count + 1;
+  socket.on("join-room", async (roomId, peerId, userId, name, audio, video) => {
+    // add peer details
+    await peerUser({
+      peerId: peerId,
+      name: name,
+      audio: audio,
+      video: video,
+    }).save();
+    // add room details
+    var roomData = await room.findOne({ roomId: roomId }).exec();
+    if (roomData == null) {
+      await room({
+        roomId: roomId,
+        userId: userId,
+        admin: peerId,
+        count: 1,
+      }).save();
+      roomData = { count: 0 };
+    } else if (roomData.userId == userId) {
+      if (roomData.admin != peerId)
+        await room.updateOne(
+          { roomId: roomId },
+          { admin: peerId, count: roomData.count + 1 }
+        );
+    } else
+      await room.updateOne({ roomId: roomId }, { count: roomData.count + 1 });
     socket.join(roomId);
     socket
       .to(roomId)
       .broadcast.emit(
         "user-connected",
-        userId,
+        peerId,
         name,
         audio,
         video,
-        rooms[roomId].count
+        roomData.count + 1
       );
-    socket.on("audio-toggle", (type) => {
-      users[userId].audio = type;
-      socket.to(roomId).broadcast.emit("user-audio-toggle", userId, type);
+    socket.on("audio-toggle", async (type) => {
+      await peerUser.updateOne({ peerId: peerId }, { audio: type });
+      socket.to(roomId).broadcast.emit("user-audio-toggle", peerId, type);
     });
-    socket.on("video-toggle", (type) => {
-      users[userId].video = type;
-      socket.to(roomId).broadcast.emit("user-video-toggle", userId, type);
+    socket.on("video-toggle", async (type) => {
+      await peerUser.updateOne({ peerId: peerId }, { video: type });
+      socket.to(roomId).broadcast.emit("user-video-toggle", peerId, type);
     });
     // chat
     socket.on("client-send", (data) => {
       socket.to(roomId).broadcast.emit("client-podcast", data, name);
     });
-    socket.on("disconnect", () => {
-      delete users.userId;
-      rooms[roomId].count -= 1;
+    socket.on("disconnect", async () => {
+      roomData = await room.findOne({ roomId: roomId }).exec();
+      await room.updateOne({ roomId: roomId }, { count: roomData.count - 1 });
+      // remove peer details
+      await peerUser.deleteOne({ peerId: peerId });
       socket
         .to(roomId)
-        .broadcast.emit("user-disconnected", userId, rooms[roomId].count);
+        .broadcast.emit("user-disconnected", peerId, roomData.count - 1);
     });
   });
 });

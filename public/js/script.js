@@ -382,6 +382,7 @@ meetingToggleBtn.addEventListener("click", (e) => {
       "join-room",
       ROOM_ID,
       Peer_ID,
+      USER_ID,
       name,
       myVideoStream.getAudioTracks()[0].enabled,
       myVideoStream.getVideoTracks()[0].enabled
