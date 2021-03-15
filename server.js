@@ -22,8 +22,9 @@ const login = require("./routes/auth/login");
 const logout = require("./routes/auth/logout");
 const index = require("./routes/index");
 const newMeeting = require("./routes/newMeeting");
+const url="mongodb+srv://VysyaShadi:DWarner@31@cluster0.nemoj.mongodb.net/Cluster0?retryWrites=true&w=majority";
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
