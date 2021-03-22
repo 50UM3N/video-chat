@@ -36,6 +36,20 @@ npm install
 npm i --sav-dev nodemon
 ```
 
+## Setting Database
+
+For the database I use [mongodb](https://www.mongodb.com/) [Atlas](https://www.mongodb.com/cloud/atlas). But you can use the local also.
+
+If you don't have any account in [Atlas](https://www.mongodb.com/cloud/atlas). Visit the page and create a free account then get your connection string. More at [Documentation](https://docs.atlas.mongodb.com/tutorial/create-new-cluster/).
+
+Rename the file .env_sample to .env then replace "connection string" to your connection string
+
+Example
+
+```
+MONGO_URL=mongodb+srv://dbUser:<password>@cluster0.kfx8y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+```
+
 ## Running the App
 
 If you install nodemon the you can use. (devStart script is already added to the package.json)
