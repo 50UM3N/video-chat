@@ -19,7 +19,7 @@ const videoGrid = document.getElementById("video-grid");
 const myPeer = new Peer(undefined, {
     path: "/peerjs",
     host: "/",
-    // port: "3000",
+    port: "3000",
 });
 var Peer_ID;
 const myVideo = document.createElement("video");
@@ -83,8 +83,7 @@ function processStream(stream) {
                         video,
                         userVideoStream,
                         call.peer,
-                        data.user,
-                        data.admin
+                        data.user
                     );
                 });
         });
@@ -132,7 +131,7 @@ function connectToNewUser(userId, stream) {
     peers[userId] = call;
 }
 var localAudioFXElement;
-function addVideoStream(video, stream, peerId, user, adminId) {
+function addVideoStream(video, stream, peerId, user) {
     // create microphone button
     const micBtn = document.createElement("button");
     micBtn.classList.add("video-element");
@@ -201,9 +200,7 @@ function addVideoStream(video, stream, peerId, user, adminId) {
     videoWrapper.appendChild(elementsWrapper);
     videoWrapper.appendChild(video);
 
-    if (adminId == peerId)
-        videoGrid.insertBefore(videoWrapper, videoGrid.childNodes[0]);
-    else videoGrid.append(videoWrapper);
+     videoGrid.append(videoWrapper);
 
     const observer = new MutationObserver((mutationsList, observer) => {
         const removeNodeLength = mutationsList[0].removedNodes.length;
