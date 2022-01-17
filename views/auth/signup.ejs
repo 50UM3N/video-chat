@@ -3,7 +3,8 @@
     <h3 class="text-center mb-3">Register S Meet</h3>
     <div class="card" style="width:100%; max-width: 35rem;">
         <div style="display: flex; justify-content: space-between; align-items: center;" class="card-header">
-            <p class="m-0">Login Form</p><a href="/login" type="button" class="btn btn-outline-success">login</a>
+            <p class="m-0">Signup Form</p><a href="/login" type="button"
+                class="btn btn-outline-primary btn-sm">Login</a>
         </div>
         <div class="card-body">
             <form action="/signup" method="POST">
@@ -19,50 +20,32 @@
                 <% } %>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Name</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <ion-icon name="person-outline"></ion-icon>
-                            </div>
-                            <input name="name" type="text" class="form-control" id="autoSizingInputGroup"
-                                placeholder="Full Name">
+                        <div class="form-floating">
+                            <input type="text" name="name" class="form-control" placeholder="name">
+                            <label>Enter your Name</label>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Username</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <ion-icon name="person-circle-outline"></ion-icon>
-                            </div>
-                            <input name="username" type="text" class="form-control" id="autoSizingInputGroup"
-                                placeholder="Username">
+                        <div class="form-floating">
+                            <input type="text" name="username" class="form-control" placeholder="username">
+                            <label>Enter your Username</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <div class="input-group">
-                        <div class="input-group-text">
-                            <ion-icon name="mail-outline"></ion-icon>
-                        </div>
-                        <input name="email" type="email" class="form-control" id="autoSizingInputGroup"
-                            placeholder="Your Email" aria-describedby="emailHelp">
-                    </div>
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                    <div class="form-floating">
+                        <input type="email" name="email" class="form-control" placeholder="email">
+                        <label>Enter your Email</label>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <div class="input-group">
-                        <div class="input-group-text">
-                            <ion-icon name="lock-closed-outline"></ion-icon>
-                        </div>
-                        <input name="password" type="password" class="form-control" id="autoSizingInputGroup"
-                            placeholder="Password">
+                    <div class="form-floating">
+                        <input type="password" class="form-control" name="password" placeholder="password">
+                        <label for="floatingPassword">Enter your Password</label>
                     </div>
                 </div>
-                <button style="width: 100%;" type="submit" class="btn btn-primary">Submit</button>
+                <button style="width: 100%;" type="submit" class="btn btn-primary">Sign Up</button>
             </form>
         </div>
     </div>
