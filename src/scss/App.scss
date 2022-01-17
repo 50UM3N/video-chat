@@ -1,2 +1,38 @@
 $primary: #2b6cb0;
 @import "~bootstrap/scss/bootstrap";
+@media (max-width: 440px) {
+    .nav-contcnt {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .new-meeting {
+        width: 124px;
+        white-space: nowrap;
+    }
+}
+
+.icon {
+    --size: 32px;
+    text-decoration: none;
+    color: #5f6368;
+    height: var(--size);
+    width: var(--size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 0rem 0.35rem;
+    transition: all 120ms linear;
+}
+
+.icon:hover {
+    background-color: rgba(197, 197, 197, 0.486);
+    color: #5f6368;
+}
+
+.icon ion-icon {
+    font-size: 1.7rem;
+}

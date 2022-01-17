@@ -1,60 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid nav-contcnt">
-        <a class="navbar-brand" href="#" style="color: #5F6368;"> <span style="font-weight: bold;">S</span> Meet</a>
-        <div class="d-flex">
-            <p class="m-0 px-3" style="font-weight: bold; color: #5F6368;">
-                <%= user.name %>
-            </p>
-            <a class="icon" href="#">
-                <ion-icon name="help-circle-outline"></ion-icon>
-            </a>
-            <a class="icon" href="#">
-                <ion-icon name="alert-circle-outline"></ion-icon>
-            </a>
-            <a class="icon" href="#">
-                <ion-icon name="settings-outline"></ion-icon>
-            </a>
-            <a class="icon" href="/logout">
-                <ion-icon name="exit-outline"></ion-icon>
-            </a>
-        </div>
-        <style>
-            @media (max-width: 440px) {
-                .nav-contcnt {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                .new-meeting {
-                    width: 124px;
-                    white-space: nowrap;
-                }
-            }
-
-            .icon {
-                text-decoration: none;
-                color: #5F6368;
-                padding: 0rem .25rem;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border-radius: .25rem;
-                margin: 0rem .35rem;
-            }
-
-            .icon:hover {
-                background-color: rgb(197, 197, 197);
-                color: #5F6368;
-            }
-
-            .icon ion-icon {
-                font-size: 1.7rem;
-            }
-        </style>
-    </div>
-</nav>
+<%- include('partials/header'); %>
 <div class="container py-5">
     <div class="row g-3">
         <div class="col-md-6">
@@ -90,25 +34,3 @@
         </div>
     </div>
 </div>
-<!-- <div class="container py-5" style="display: flex; justify-content: center; align-items: center;">
-    <div class="card" style="width: 25rem;">
-        <div class="card-header">
-            Meeting
-        </div>
-        <div class="card-body">
-            <form action="/join-room" method="POST">
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Enter your Room Id</label>
-                    <input required name="room_id" class="form-control" placeholder="Room Id">
-                    <div class="form-text">You have to enter the room id to enter a specific room.
-                    </div>
-                </div>
-                <button style="width: 100%;" type="submit" class="btn btn-primary mb-3">Join</button>
-            </form>
-            <form action="/create-room" method="POST">
-                <button style="width: 100%;" type="submit" class="btn btn-success mb-3">Create room</button>
-            </form>
-            <a style="width: 100%;" type="submit" class="btn btn-danger">Log Out</a>
-        </div>
-    </div>
-</div> -->
