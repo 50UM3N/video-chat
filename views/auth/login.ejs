@@ -3,40 +3,30 @@
     <h3 class="text-center mb-3">Login S Meet</h3>
     <div class="card" style="width:100%; max-width: 35rem;">
         <div style="display: flex; justify-content: space-between; align-items: center;" class="card-header">
-            <p class="m-0">Login Form</p><a href="/signup" type="button" class="btn btn-outline-success">Sign Up</a>
+            <p class="m-0">Login Form</p><a href="/signup" type="button" class="btn btn-outline-primary btn-sm">Sign
+                Up</a>
         </div>
         <div class="card-body">
             <form action="/login" method="POST">
                 <% if(locals.messages.success){ %>
-                    <div class="alert alert-success" role="alert">
-                        <%= locals.messages.success %>
-                    </div>
-                    <% } %>
-                        <% if(locals.messages.error){ %>
-                            <div class="alert alert-danger" role="alert">
-                                <%= locals.messages.error %>
-                            </div>
-                            <% } %>
-                                <div class="mb-3">
-                                    <label class="form-label">Username</label>
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <ion-icon name="person-circle-outline"></ion-icon>
-                                        </div>
-                                        <input name="username" type="text" class="form-control" placeholder="Username">
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <ion-icon name="lock-closed-outline"></ion-icon>
-                                        </div>
-                                        <input name="password" type="password" class="form-control"
-                                            placeholder="Password">
-                                    </div>
-                                </div>
-                                <button style="width: 100%;" type="submit" class="btn btn-primary">Login</button>
+                <div class="alert alert-success" role="alert">
+                    <%= locals.messages.success %>
+                </div>
+                <% } %>
+                <% if(locals.messages.error){ %>
+                <div class="alert alert-danger" role="alert">
+                    <%= locals.messages.error %>
+                </div>
+                <% } %>
+                <div class="form-floating mb-3">
+                    <input type="text" name="username" class="form-control" placeholder="username">
+                    <label for="floatingInput">Enter your username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" name="password" placeholder="password">
+                    <label for="floatingPassword">Enter your Password</label>
+                </div>
+                <button style="width: 100%;" type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
     </div>
